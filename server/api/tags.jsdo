@@ -1,0 +1,256 @@
+import Express from 'express'
+import bodyParser from 'body-parser'
+const router = Express.Router();
+import Ipfstransaction from '../../models/ipfstransaction'
+import {responseClient} from '../util'
+import User from '../../models/user'
+
+
+const Tx = require('ethereumjs-tx');
+const Web3 = require('web3');
+const InputDataDecoder = require('input-data-decoder-ethereum');
+
+const tokenAbi = [
+	{
+		"constant": false,
+		"inputs": [
+			{
+				"name": "x",
+				"type": "string"
+			}
+		],
+		"name": "set",
+		"outputs": [],
+		"payable": false,
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"constant": true,
+		"inputs": [],
+		"name": "get",
+		"outputs": [
+			{
+				"name": "",
+				"type": "string"
+			}
+		],
+		"payable": false,
+		"stateMutability": "view",
+		"type": "function"
+	}
+]
+//发送账户的秘钥
+const privateKey = Buffer.from('d80bd914a062b4e31e16cbb74c827fee0dcf76942ffb1df9416565b0a34ef0f9', 'hex')
+//配置web3的httpprovider，采用infura
+const web3 = new Web3(new Web3.providers.HttpProvider("http://127.0.0.1:8545"));
+const decoder = new InputDataDecoder(tokenAbi);
+//let txlogs;
+let senddata; //发送数据
+let gnonce; //nonce
+let ttxhash;
+let transaction;
+let gasused;
+const contractAddr = '0xF9448B279F57AD5073d996b1BF65a7d18878A599';//合约地址
+//"0xc411f680ae76e7457112ddd4a231a1ab71ed9b72";
+//"0x6f12fbbc9eba17d78a357f042682d6a0db57a1ae";
+web3.eth.defaultAccount = '0xc411f680ae76e7457112ddd4a231a1ab71ed9b72';//设置使用的账户
+//初始化合约信息，便于后面合约交互的abi编码发送信息
+const mycontract = new web3.eth.Contract(tokenAbi,contractAddr,{
+  from: '0xc411f680ae76e7457112ddd4a231a1ab71ed9b72',
+  gasPrice: '1000000000'
+} );
+
+
+     router.post('/addTransaction', function (req, res) {
+        let {transaction} = req.body;
+        console.log("发送的hash数据",transaction);
+        const username = req.session.userInfo.username;
+        console.log('用户名:',username)
+        
+        //blockchainupload  = req.session.userInfo.blockchainupload;
+        
+
+        User.findOne({username:username}).then(userInfo=> {
+            console.log('权限:',blockchainupload)
+            const blockchainupload = userInfo.blockchainupload;
+             let wallet = userInfo.wallet;
+             console.log("钱包wallet",wallet);
+
+            console.log(blockchainupload === 'true'); 
+            if (blockchainupload === 'true') 
+            { 
+                //编码使用合约的函数及参数用于后续的交易
+                const encoded = mycontract.methods.set(transaction).encodeABI();
+                //获取账户的nonce
+                 web3.eth.getTransactionCount(web3.eth.defaultAccount,'pending', function (err, nonce) {
+                     gnonce = nonce;
+                   console.log("nonce value is ", gnonce)});
+                //获取区块的gas限制
+                const gasLimit = web3.eth.getBlock("latest").gasLimit;
+                //估计交易花费的gas
+                 let estimategas = web3.eth.estimateGas({
+                      to: contractAddr,
+                      data: encoded
+                  });  
+                  estimategas = web3.utils.toHex(estimategas);
+                  console.log('估计的gas花销zz',estimategas);
+                //估计gas价格
+                const gasPrice = web3.eth.getGasPrice();
+                //const dgasprice = web3.utils.hexToNumber(gasPrice);
+                //配置交易信息rawTx
+                  const rawTx = {
+                      nonce: web3.utils.toHex(gnonce),
+                      gasPrice: web3.utils.toHex(gasPrice),
+                      //'0x3B9ACA00',
+                      gasLimit: web3.utils.toHex(gasLimit),
+                      gas: estimategas,
+                      value: '0x00',
+                      chainId: '0x2A',
+                      to: contractAddr,
+                      data: encoded
+                  };  
+                
+                 const cost = web3.utils.hexToNumber(estimategas)
+                 console.log('估计的cost花销',cost);
+                 const balance = wallet - cost/10000;
+
+                if(balance > 0){
+                    User.updateOne({username:username},({wallet:balance}))
+                                .then(data => {
+                                    responseClient(res, 200, 0, '钱包余额充足，请再按一次完成上传', data);
+                                }).catch(err => {
+                                throw err
+                            })
+                        //tx交易签名
+                        const tx = new Tx(rawTx);
+                        tx.sign(privateKey);
+                        //发送交易
+                        const serializedTx = tx.serialize();
+                        //console.log(serializedTx.toString('hex'));
+                        web3.eth.sendSignedTransaction("0x" + serializedTx.toString('hex'), function (err, hash) {
+                            if(hash){
+                            console.log("交易的哈希值Tx: " , hash);
+                            ttxhash = hash; 
+                            transaction = hash;      
+                            console.log('文件的hash已经写入到区块链！')
+                            //responseClient(res, 200, 1, '交易成功，文件的hash已经写入到区块链'+hash);  
+                            }     
+                            else{
+                                //responseClient(res, 200, 0, '文件的hash写入到区块链失败');  
+                                console.log('文件的hash写入到区块链失败！');
+                            }        
+                        });  
+                        
+                        // Ipfstransaction.findOne({
+                        //     transaction: ttxhash
+                        // }).then(result => {
+                        //     if (!result) {
+           
+           
+           
+                        //         let ipfstransaction = new Ipfstransaction({
+                        //             username,
+                        //             ttxhash
+                        //         });
+                        //         ipfstransaction.save()
+                        //             .then(data => {
+                        //                 responseClient(res, 200, 0, '添加成功', data);
+                        //             }).catch(err => {
+                        //             throw err
+                        //         })
+                        //     } else {
+                        //         responseClient(res, 200, 1, '该交易已存在');
+                        //     }
+                        // }).catch(err => {
+                        //     responseClient(res);
+                        // });
+                     
+
+
+
+
+                        } 
+
+                    
+            
+                else
+                {
+                    responseClient(res, 200, 1, '账户余额不够，请充值');
+                }
+             
+         }
+          
+            
+         else 
+         {
+             console.log('区块链权限',blockchainupload);
+             res.send(responseClient(res,200,1,'没有对应权限，请联系管理员获取权限。'));
+             
+         }
+        });
+   
+        
+    });
+
+    router.get('/updateWallet',function (req, res) {
+        let cost = req.query.wallet;
+        console.log("花销cost",cost);
+        const username = req.session.userInfo.username;
+        console.log("用户名",username);
+
+        User.findOne({username:username}).then(result => {
+            if (result) {
+        console.log('查询的result',result);
+        const wallet = result.wallet;
+        console.log("钱包额度",wallet);
+        const balance = wallet - cost/10000 ;
+
+        if(balance > 0){
+            User.updateOne({username:username},({wallet:balance}))
+                        .then(data => {
+                            responseClient(res, 200, 0, '扣费成功', data);
+                        }).catch(err => {
+                        throw err
+                    })
+                } 
+    
+        else
+        {
+            responseClient(res, 200, 1, '账户余额不够，请充值');
+        }
+
+            }
+            else{
+                responseClient(res, 200, 1, '扣费账户不存在');
+        }
+
+        }) .catch(err => {
+            responseClient(res);
+
+        });
+    });
+
+    router.get('/getAllTransactions', (req,res) => {
+        let user = req.session.userInfo.username;
+        let skip = (req.query.pageNum - 1) < 0 ? 0 : (req.query.pageNum - 1) * 10;
+        let responseData = {
+            total: 0,
+            list: []
+        };
+        Ipfstransaction.count()
+        .then(count => {
+            responseData.total = count;
+           Ipfstransaction.find({username: user},'_id username transaction date', {skip:skip, limit:10})
+                .then((result) => {
+                      responseData.list = result;
+                      responseClient(res,200,0,'',responseData)
+                })
+                .catch(err => {
+                    responseClient(res);
+                })
+      });
+});
+
+
+module.exports = router;

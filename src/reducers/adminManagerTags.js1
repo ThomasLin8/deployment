@@ -1,0 +1,50 @@
+const initialState = {
+    list: [],
+    pageNum: 1,
+    total:0
+    
+    
+     
+};
+export const actionTypes = {
+    'GET_ALL_TRANSACTION': "GET_ALL_TRANSACTION",
+    'RESOLVE_GET_ALL_TRANSACTIONS': "RESOLVE_GET_ALL_TRANSACTIONS",
+    //'DELETE_TRANSACTION':"ManagerTRANSACTIONActionTypes",
+    'ADD_TRANSACTION':"ManagerTRANSACTIONActionTypes"
+
+};
+
+export const actions = {
+    get_all_transaction: function (pageNum=1) {
+        return {
+            type: actionTypes.GET_ALL_TRANSACTION,
+            pageNum:pageNum
+        }
+    },
+    add_transaction: function (username) {
+        return {
+            type: actionTypes.ADD_TRANSACTION,
+            username
+        }
+    },
+    // delete_user: function (username) {
+    //     return {
+    //         type: actionTypes.DELETE_USER,
+    //         username
+    //     }
+    // }
+};
+
+export function transactions(state = initialState, action) {
+    switch (action.type) {
+        case actionTypes.RESOLVE_GET_ALL_TRANSACTIONS:
+            return {
+                list: action.data.list,
+                pageNum: action.data.pageNum,
+                total:action.data.total
+            };
+        default:
+            return state;
+
+    }
+}

@@ -1,0 +1,47 @@
+.ant-dropdown-button {
+  margin: 0 8px 8px 0;
+}
+.core-header {
+  background: #3e3e3e;
+  height: 50px;
+  line-height: 50px;
+  padding: 0 10px;
+  color: #FFF;
+}
+.core-header h1 {
+  display: inline-block;
+  color: #FFF;
+}
+.core-header__right {
+  float: right;
+  margin-right: 10px;
+  cursor: pointer;
+}
+.container{
+  height: 300px;
+  width: 285px;
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  padding-top: 20px;
+  background-color: #fff;
+  margin: 0 auto;
+}
+.container>div{
+  width: 50%;
+  background: #eee;
+
+}
+.container p:nth-child(2){
+  margin-top: 20px;
+  color: black;
+}
+
+.container>img{
+  width: 27%;
+  margin-top: 20px;
+}
+.centerP{
+  margin:25px 0;
+  color: black;
+}

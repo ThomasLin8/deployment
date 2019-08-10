@@ -1,0 +1,411 @@
+import React, { Component, PropTypes } from 'react';
+import style from './style.css';
+import { Table, Pagination, Button, Popconfirm, Input, Modal, Form, Radio,
+    DatePicker, Col, TimePicker, Select, Cascader, InputNumber } from  'antd';
+import PureRenderMixin from 'react-addons-pure-render-mixin'
+import { bindActionCreators } from 'redux'
+import { connect } from 'react-redux'
+import { actions } from '../../reducers/adminManagerUser'
+//import { Button } from 'antd/lib/radio';
+//import DeleteButton from '../../components/DeleteButton'
+const { get_all_users,delete_user,update_user } = actions;
+const FormItem = Form.Item;
+const Option = Select.Option;
+
+const formItemLayout = {
+  labelCol: {
+    xs: { span: 24 },
+    sm: { span: 5 },
+  },
+  wrapperCol: {
+    xs: { span: 24 },
+    sm: { span: 12 },
+  },
+};
+const CollectionCreateForm = Form.create({ name: 'form_in_modal' })(
+    // eslint-disable-next-line
+    class Child extends React.Component {
+         defaultProps = {
+            defaultvalue: [ ]
+         }
+        handleUpdate  (value)  {
+            this.props.handleUpdate(value)
+        }
+
+        handleSubmit = (e) => {
+            e.preventDefault();
+           
+            this.props.form.validateFields((err, values) => {
+              if (!err) {
+                this.props.handleUpdate;
+                console.log('Received values of form: ', values);
+                
+              }
+            });
+          }
+          
+          handleChange = () => {
+            
+            this.props.form.setFieldsValue({
+                用户名: this.props.defaultvalue.username,
+                密码: this.props.defaultvalue.password,
+                用户类型: this.props.defaultvalue.type,
+                区块链上传权限: this.props.defaultvalue.blockchainupload,
+                IPFS上传权限: this.props.defaultvalue.ipfsupload,
+                本地上传权限: this.props.defaultvalue.localupload,
+    
+            });
+          }
+        //   componentWillUpdate (){
+        //     //通过pros接收父组件传来的方法
+        //     this.handleSelectChange()
+        // }
+         
+
+      render() {
+        const {
+          visible, onCancel, onCreate, form,editClick
+        } = this.props;
+        const { getFieldDecorator } = this.props.form;
+        //const { defaultvalue} = this.props;
+       // this.handleSelectChange;
+        
+        return (
+           
+          <Modal
+            visible={visible}
+            title="用户编辑"
+            okText="完成"
+            onCancel={onCancel}
+            onOk={onCreate}
+            
+          >
+            <Form onSubmit={this.handleSubmit} >
+            
+        <FormItem
+          
+          label="用户名"
+          labelCol={{ span: 4 }}
+          wrapperCol={{ span: 8 }}
+         
+        >
+         {this.handleSelectChange}
+         
+          {getFieldDecorator('用户名', {
+            rules: [{ required: true, message: 'Please input your username!' }],
+            
+           // initialValue:this.props.defaultvalue.username,
+          })(
+            <Input />
+          )}
+        </FormItem>
+        <FormItem
+          label="密码"
+          labelCol={{ span: 4 }}
+          wrapperCol={{ span: 8 }}
+        >
+          {getFieldDecorator('密码', {
+            rules: [{ required: true, message: 'Please input your password!' }],
+            //initialValue:this.props.defaultvalue.password,
+          })(
+            <Input />
+          )}
+        </FormItem>
+        <FormItem
+          label="用户类型"
+          labelCol={{ span: 4 }}
+          wrapperCol={{ span: 8 }}
+        >
+          {getFieldDecorator('用户类型', {
+            rules: [{ required: true, message: 'Please select your usertype!' }],
+            //initialValue:this.props.defaultvalue.type,
+          })(
+            <Select
+              placeholder="Select a option and change input text above"
+              
+            >
+              <Option value="admin">admin</Option>
+              <Option value="user">user</Option>
+            </Select>
+          )}
+        </FormItem>
+        <FormItem
+          label="区块链上传权限"
+          labelCol={{ span: 4 }}
+          wrapperCol={{ span: 8 }}
+        >
+          {getFieldDecorator('区块链上传权限', {
+            rules: [{ required: true, message: 'Please select your permission!' }],
+          })(
+            <Select
+              placeholder="Select a option and change input text above"
+              
+            >
+              <Option value="true">true</Option>
+              <Option value="false">flase</Option>
+            </Select>
+          )}
+        </FormItem>
+        <FormItem
+          label="IPFS上传权限"
+          labelCol={{ span: 4 }}
+          wrapperCol={{ span: 8 }}
+        >
+          {getFieldDecorator('IPFS上传权限', {
+            rules: [{ required: true, message: 'Please select your permission!' }],
+          })(
+            <Select
+              placeholder="Select a option and change input text above"
+              onChange={this.handleSelectChange}
+            >
+              <Option value="true">true</Option>
+              <Option value="false">flase</Option>
+            </Select>
+          )}
+        </FormItem>
+        <FormItem
+          label="本地上传权限"
+          labelCol={{ span: 4 }}
+          wrapperCol={{ span: 8 }}
+        >
+          {getFieldDecorator('本地上传权限', {
+            rules: [{ required: true, message: 'Please select your permission!' }],
+          })(
+            <Select
+              placeholder="Select a option and change input text above"
+              onChange={this.handleSelectChange}
+            >
+              <Option value="true">true</Option>
+              <Option value="false">flase</Option>
+            </Select>
+          )}
+        </FormItem>
+        <FormItem
+          wrapperCol={{ span: 8, offset: 4 }}
+        >
+        
+          <Button type="primary" htmlType="submit">
+            Submit
+          </Button>
+          <Button  onClick={this.handleChange}>
+            Read
+          </Button>
+          
+        </FormItem>
+        
+      </Form>
+          </Modal>
+        );
+      }
+     
+    }
+  );
+
+
+
+
+class AdminManagerUser extends Component {
+
+    constructor(props) {
+        super(props);
+        this.shouldComponentUpdate = PureRenderMixin.shouldComponentUpdate.bind(this);
+        //this.handleDelete = this,handleDelete.bind(this)
+        this.state = {
+            visible: false,
+            text:null
+          };
+        this.columns = [{
+            title: '姓名',
+            dataIndex: 'username',
+            key: 'name'
+        }, {
+            title: 'ID',
+            dataIndex: '_id',
+            key: 'ID',
+        }, {
+            title: '密码',
+            dataIndex: 'password',
+            key: 'password',
+        }, {
+            title: '身份',
+            dataIndex: 'type',
+            key: 'address',
+        },
+        {
+          title: '钱包余额',
+          dataIndex: 'wallet',
+          key: 'wallet',
+      },
+        {
+            title: '区块链上传权限',
+            dataIndex: 'blockchainupload',
+            key: 'blockchainupload',
+        }, {
+            title: 'IPFS上传权限',
+            dataIndex: 'ipfsupload',
+            key: 'ipfsupload',
+        }, {
+            title: '本地上传权限',
+            dataIndex: 'localupload',
+            key: 'localupload',
+        },{
+            title:'操作',
+            key:'action',
+            render:(text,record,index) => {
+                console.log('text数据',text);
+                console.log('record数据',record);
+                console.log('index数据',index);
+                //const { getFieldDecorator } = this.props.form;
+                return(
+                <div>
+                    <span>
+                    <a href="javascript:;" onClick={() => this.editClick(text)}>Edit</a>
+                    <CollectionCreateForm
+                    defaultvalue={this.state.text}
+                    wrappedComponentRef={this.saveFormRef}
+                    visible={this.state.visible}
+                    onCancel={this.handleCancel}
+                    onCreate={this.handleCreate}
+                    handleUpdate={this.props.handleUpdate}                    
+                    />
+                   
+                    <span className="ant-divider" />
+                    <Popconfirm title="Sure to delete?" onConfirm={() => this.handleDelete(text.username)}>
+                    <a href="javascript:;">Delete</a>
+                    </Popconfirm>
+                    </span>
+                </div>    
+                )
+            }
+        }
+    ]
+        
+    }
+    editClick = (text) => {
+        //this.Child.handleValue();
+
+        this.setState({
+            text: text,
+        });
+        console.log("状态里的值",this.state.text)
+        this.setState({
+             visible: true,
+         });
+        
+    };
+    showModal = () => {
+        this.setState({ visible: true });
+      }
+    
+      handleCancel = () => {
+        this.setState({ visible: false });
+      }
+    
+      handleCreate = () => {
+        const form = this.formRef.props.form;
+        form.validateFields((err, values) => {
+          if (err) {
+            return;
+          }
+    
+          console.log('Received values of form: ', values);
+          form.resetFields();
+          this.setState({ visible: false });
+        });
+      }
+      onRef = (ref) => {
+        this.Child = ref
+    }
+    
+      saveFormRef = (formRef) => {
+        this.formRef = formRef;
+      }
+    handleDelete  (username)  {
+        this.props.deleteUser(username)
+    }
+    handleUpdate  (value)  {
+        this.props.updateUser(value)
+    }
+
+    
+
+    render() {
+        
+        return (
+            <div>
+                
+                <h2>用户管理</h2>
+                <div>
+                    <Input size="large"  placeholder="请输入删除的用户名,回车结束输入" 
+                    onPressEnter={(e) => {
+                        const username= e.target.value;
+                        console.log("输入的值",username);
+                        this.props.deleteUser(username);}}
+
+                    />
+                    </div>
+                
+                  <Table
+                  
+                      className={style.table}
+                      pagination={false}
+                      columns={this.columns}
+                      dataSource={this.props.list}/>
+                     
+                  <div>
+                      <Pagination
+                          onChange={(pageNum)=>{
+                              this.props.getAllUsers(pageNum);
+                          }}
+                          current={this.props.pageNum}
+                          total={this.props.total}/>
+                  </div>
+            </div>
+        )
+    }
+
+    
+
+
+    componentDidMount() {
+        //缓存
+        if(this.props.list.length===0)
+            this.props.getAllUsers();
+           
+    }
+}
+
+
+AdminManagerUser.propsTypes = {
+    pageNUm: PropTypes.number.isRequired,
+    list: PropTypes.arrayOf(PropTypes.object),
+    total:PropTypes.number.isRequired
+};
+
+AdminManagerUser.defaultProps = {
+    pageNum: 1,
+    list: [],
+    total:0
+};
+
+function mapStateToProps(state) {
+    let {pageNum, list,total} = state.admin.users;
+    return {
+        pageNum,
+        list,
+        total
+    }
+}
+
+function mapDispatchToProps(dispatch) {
+    return {
+        getAllUsers: bindActionCreators(get_all_users, dispatch),
+        deleteUser: bindActionCreators(delete_user, dispatch),
+        updateUser: bindActionCreators(update_user, dispatch)
+    }
+}
+
+export default connect(
+    mapStateToProps,
+    mapDispatchToProps
+)(AdminManagerUser)

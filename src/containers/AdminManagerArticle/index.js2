@@ -1,0 +1,118 @@
+import React,  { Component } from 'react';
+//import remark from 'remark';
+//import reactRenderer from 'remark-react';
+//import { Input, Select, Button, Modal } from 'antd';
+import { Button, Input, Icon } from 'antd';
+import '../Detail/style.css';
+import './style.css';
+
+
+const Search = Input.Search;
+//api插件的引用
+const Web3 = require('web3');
+const InputDataDecoder = require('input-data-decoder-ethereum');
+//const simpleStorage = contract(SimpleStorageContract)
+//配置web3的httpprovider，采用infura
+const web3 = new Web3(new Web3.providers.HttpProvider("http://127.0.0.1:8545"));
+const tokenAbi = [
+	{
+		"constant": false,
+		"inputs": [
+			{
+				"name": "x",
+				"type": "string"
+			}
+		],
+		"name": "set",
+		"outputs": [],
+		"payable": false,
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"constant": true,
+		"inputs": [],
+		"name": "get",
+		"outputs": [
+			{
+				"name": "",
+				"type": "string"
+			}
+		],
+		"payable": false,
+		"stateMutability": "view",
+		"type": "function"
+	}
+]
+const decoder = new InputDataDecoder(tokenAbi);
+
+class AdminManagerArticle extends Component {
+    constructor(props) {
+        super(props)
+        this.state = {
+            blockChainHash: null,
+            txhash:null,
+            tblockhash:null,
+            msgshow: false,
+            gasused: null,
+            blockhash: null
+          }
+      
+    }
+
+    componentWillMount() {
+
+      }
+    
+      render() {
+        return (<div className="App">
+
+                <Search
+                    placeholder="input search Tx Hash code"
+                    onSearch={value => {
+                        this.setState({txhash: value});
+                        web3.eth.getTransaction(this.state.txhash).then (
+                        (rdata) => {
+                          console.log('tx hash查找到的交易:',rdata);
+                          console.log('块哈希值:', rdata.blockHash);
+                          const trdata = rdata.input;
+                          console.log('解码前数据:', trdata);
+                          const dedata = decoder.decodeData(trdata);
+                          console.log('解码得到的哈希值', dedata.inputs);
+                          this.setState({blockChainHash: dedata.inputs});
+                          this.setState({gasused: rdata.gas});
+                          this.setState({tblockhash: rdata.blockHash});
+                          this.setState({msgshow: true});
+                        }
+                        )
+                      }
+                        }
+                    style={{ width: 200 }}
+                    />
+                        
+
+          {
+            this.state.msgshow
+              ? <div>
+                  <h2>从区块链读取到的hash值：{this.state.blockChainHash}</h2>
+                  <h2>该交易的Hash：{this.state.txhash}</h2>
+                  <h2>该交易的区块链Hash：{this.state.tblockhash}</h2>
+                  <h2>该交易消耗的gas：{this.state.gasused}</h2>
+                </div>
+              : <div/>
+          }
+          {
+            this.state.readmsg
+              ? <div>
+                  <h2>浏览器访问：{"http://localhost:8080/ipfs/" + this.state.blockChainHash}</h2>
+                  <img alt="" style={{
+                      width: 1600
+                    }} src={"http://localhost:8080/ipfs/" + this.state.blockChainHash}/>
+                </div>
+              : <img alt=""/>
+          }
+        </div>);
+      }
+    }
+    
+export default AdminManagerArticle;
