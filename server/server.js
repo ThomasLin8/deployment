@@ -50,6 +50,6 @@ app.listen(port,(err)=>{
     if(err){
         console.error(err)
     }else{
-        console.log(`===>open http://${config.host}:${config.port} in a browser to view the app`);
+        console.log(`===> http://${config.host}:${config.port} in a browser to view the app`);
     }
 });
