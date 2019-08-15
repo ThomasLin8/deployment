@@ -29,7 +29,8 @@ const Web3 = require('web3');
 const InputDataDecoder = require('input-data-decoder-ethereum');
 //const simpleStorage = contract(SimpleStorageContract)
 //设置IPFS参数
-const ipfs = ipfsAPI({host: 'localhost', port: '5001', protocol: 'http'});
+const ipfs = ipfsAPI('/ip4/39.96.12.134/tcp/5001');
+//const ipfs = ipfsAPI({host: 'localhost', port: '5001', protocol: 'http'});
 //使用的合约的abi信息
 const tokenAbi =[
 	{
@@ -101,7 +102,7 @@ const privateKey = Buffer.from('061676AE52F57B2A90F859889C76FEFCF68EE4483A0E46D0
 // console.log(privateKey1.toString('hex'));
 // const privateKey = Buffer.from(privateKey1.toString('hex'), 'hex')
 //配置web3的httpprovider，采用infura
-const web3 = new Web3(new Web3.providers.HttpProvider("http://127.0.0.1:8546"));
+const web3 = new Web3(new Web3.providers.HttpProvider("http://39.96.12.134:8546"));
 const decoder = new InputDataDecoder(tokenAbi);
 //let txlogs;
 let senddata = []; //发送数据
@@ -111,7 +112,7 @@ let transaction =[];
 let gasused;
 let cost;
 let isWriteSuccess;
-const contractAddr = '0x84add4b9a76cafebede13d9b10eb0c290a67c3c3';//合约地址
+const contractAddr = '0xc0e0fcc5e072b6000e55b0cfbe317105213c98cc';//合约地址
 //0xF9448B279F57AD5073d996b1BF65a7d18878A599
 //"0xc411f680ae76e7457112ddd4a231a1ab71ed9b72";
 //"0x6f12fbbc9eba17d78a357f042682d6a0db57a1ae";
@@ -202,7 +203,7 @@ class uploadfileblockchain extends Component {
                   console.log('大小size',file.size);
                   this.setState({filetype:file.type});
                   this.setState({filesize:file.size});
-          
+                  this.setState({imgHash: file.name})
     
               }}/>
             
