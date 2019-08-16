@@ -135,40 +135,19 @@ class adminManagerTags extends Component {
                 return(
                 <div>
                     <span>
-                    <a href="javascript:;" onClick={() => {
-                         const deipfshash = new Blind({ encryptKey: 'PZ3oXv2v6Pq5HAPFI9NFbQ==' }).decrypt(text.enipfshash);
-                         console.log('解密后hash',deipfshash)
-                         ipfs.get(deipfshash, function (err, files) {
-                             
-                            files.forEach((file) => {
-                                const fileUrl = "39.100.155.67/ipfs/" + deipfshash;
- 
-                                    new Downloader({ 
-                                        url: fileUrl
-                                    })
-                                    .then(function () {
-                                        console.log('完成')
-                                    })
-                                    .catch(function (error) {
-                                        console.log('失败')
-                                        // Called when an error occurred
-                                    });
-                            //  console.log('路径',file.path)
-                            //   console.log('O文件',file.content)
-                            //  // console.log(file.content.toString('utf8'))
-                            //  const blob = new Blob([new Uint8Array(file)]);
-                            //  console.log(blob)
-                            //   // const blob = new Blob();
-                            //   // console.log(blob)
-                            //   download(file.content,text._id);
-                              // ipfs.files.flush('/', (err) => {
-                              //   if (err) {
-                              //     console.error(err)
-                              //   }
-                              // })
-                            })
-                          })
-                    }}>Download</a>
+                     <a href="javascript:;" onClick={() => {
+                        const deipfshash = new Blind({ encryptKey: 'PZ3oXv2v6Pq5HAPFI9NFbQ==' }).decrypt(text.enipfshash);
+                        const fileUrl = "http://localhost:8080/ipfs/" + deipfshash;
+                        const a = document.createElement('a');                     
+                        //var url = window.URL.createObjectURL(blob);
+                        var filename = 'download';
+                        a.href = fileUrl;
+                        a.download = filename;
+                        a.click();
+                        window.URL.revokeObjectURL(url);
+
+
+                        }}>Download</a> 
                    
                    
                     <span className="ant-divider" />
