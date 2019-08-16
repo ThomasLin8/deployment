@@ -29,7 +29,7 @@ const Web3 = require('web3');
 const InputDataDecoder = require('input-data-decoder-ethereum');
 //const simpleStorage = contract(SimpleStorageContract)
 //设置IPFS参数
-const ipfs = ipfsAPI('/ip4/39.96.12.134/tcp/5001');
+const ipfs = ipfsAPI('/ip4/39.100.155.67/tcp/5001');
 //const ipfs = ipfsAPI({host: 'localhost', port: '5001', protocol: 'http'});
 //使用的合约的abi信息
 const tokenAbi =[
@@ -102,7 +102,7 @@ const privateKey = Buffer.from('061676AE52F57B2A90F859889C76FEFCF68EE4483A0E46D0
 // console.log(privateKey1.toString('hex'));
 // const privateKey = Buffer.from(privateKey1.toString('hex'), 'hex')
 //配置web3的httpprovider，采用infura
-const web3 = new Web3(new Web3.providers.HttpProvider("http://39.96.12.134:8546"));
+const web3 = new Web3(new Web3.providers.HttpProvider("http://39.100.155.67:8546"));
 const decoder = new InputDataDecoder(tokenAbi);
 //let txlogs;
 let senddata = []; //发送数据
@@ -482,7 +482,7 @@ class uploadfileblockchain extends Component {
     txgasused:[],
     balance:[]
   };
-//   S
+//   
   // const mapDispatchToProps = dispatch => {
   //   return {
   //     addTransaction: username => {

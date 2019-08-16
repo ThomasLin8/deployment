@@ -1,5 +1,5 @@
 module.exports = {
-    host:process.env.HOST || '39.96.12.134',
+    host:process.env.HOST || '39.100.155.67',
     port:process.env.PORT || (process.env.NODE_ENV === 'production' ? 8081 : 3000),
     apiHost:process.env.APIHOST || '127.0.0.1',
     apiPort:process.env.APIPORT || '3030',
