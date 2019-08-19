@@ -137,7 +137,7 @@ class adminManagerTags extends Component {
                     <span>
                      <a href="javascript:;" onClick={() => {
                         const deipfshash = new Blind({ encryptKey: 'PZ3oXv2v6Pq5HAPFI9NFbQ==' }).decrypt(text.enipfshash);
-                        const fileUrl = "http://localhost:8080/ipfs/" + deipfshash;
+                        const fileUrl = "http://39.100.155.67:8080/ipfs/" + deipfshash;
                         const a = document.createElement('a');                     
                         //var url = window.URL.createObjectURL(blob);
                         var filename = 'download';
