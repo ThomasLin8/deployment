@@ -1,9 +1,9 @@
 import { combineReducers } from 'redux'
 import { users } from './adminManagerUser'
-import { transactions } from './adminManagerTags'
-//import { reducer as transactions } from './adminManagerTags'
+import { transactions } from './AdminManagerTransactions'
+//import { reducer as transactions } from './AdminManagerTransactions'
 //import { reducer as newArticle } from "./adminManagerNewArticle";
-import { wallet } from './adminManagerArticle'
+import { wallet } from './AdminManagerLocal'
 
 export const actionTypes = {
     ADMIN_URI_LOCATION:"ADMIN_URI_LOCATION",

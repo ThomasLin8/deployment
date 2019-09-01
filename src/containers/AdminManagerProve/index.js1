@@ -46,7 +46,7 @@ const tokenAbi = [
 ]
 const decoder = new InputDataDecoder(tokenAbi);
 
-class AdminManagerArticle extends Component {
+class AdminManagerProve extends Component {
     constructor(props) {
         super(props)
         this.state = {
@@ -65,8 +65,9 @@ class AdminManagerArticle extends Component {
       }
     
       render() {
-        return (<div className="App">
-
+        return (<div>
+                <h3>信息验证</h3>
+                <br></br>
                 <Search
                     placeholder="input search Tx Hash code"
                     onSearch={value => {
@@ -87,7 +88,7 @@ class AdminManagerArticle extends Component {
                         )
                       }
                         }
-                    style={{ width: 200 }}
+                      style={{ width: 500 }}
                     />
                         
 
@@ -102,7 +103,7 @@ class AdminManagerArticle extends Component {
               : <div/>
           }
           {
-            this.state.readmsg
+            this.state.msgshow
               ? <div>
                   <h2>浏览器访问：{"http://localhost:8080/ipfs/" + this.state.blockChainHash}</h2>
                   <img alt="" style={{
@@ -115,4 +116,4 @@ class AdminManagerArticle extends Component {
       }
     }
     
-export default AdminManagerArticle;
+export default AdminManagerProve;

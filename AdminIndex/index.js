@@ -54,48 +54,30 @@ class AdminIndex extends Component {
                 <br /><br />
 
 
-                <div style={{ background: '#ECECEC', padding: '30px', margin:0 ,}}>
+  {/* <Card title="Card title" extra={<a href="#">More</a>} style={{ width: 300 }}>
+    <p>Card content</p>
+    <p>Card content</p>
+    <p>Card content</p>
+  </Card> */}
+
+  <div style={{ background: '#ECECEC', padding: '30px' }}>
     <Row gutter={16}>
       <Col span={8}>
 
-        <Card title="区块链文件存储" bordered={false}>
-        <font color='red'>该模块首先将文件的存储到IPFS,然后再存储到区块链,最后将存储记录存储到数据库,若无对应权限请联系管理员获取.</font>
+        <Card title="上传文件到区块链" bordered={false}>
+        <font color='red'>该模块实现文件的存储</font>
           </Card>
       </Col>
 
       <Col span={8}>
-      <Card title="存储记录" bordered={false}>
-        <font color='red'>该模块可以查阅存储的记录,下载对应存储的文件,若无对应权限请联系管理员获取.</font>
-          </Card>
+        <Card title="Card title" bordered={false}>Card content</Card>
       </Col>
-
-    
+      <Col span={8}>
+        <Card title="Card title" bordered={false}>Card content</Card>
+      </Col>
     </Row>
-
   </div>
-                <div style={{ background: '#ECECEC', padding: '30px' }}>
-    <Row gutter={16}>
-      <Col span={8}>
 
-        <Card title="信息验证" bordered={false}>
-        <font color='red'>该模块提供两种方式进行验证,分别为文件方式进行存储验证和加密哈希值进行存储验证,还提供区块链信息查询.若无对应权限请联系管理员获取.</font>
-          </Card>
-      </Col>
-      <Col span={8}>
-      <Card title="本地文件加密存储" bordered={false}>
-        <font color='red'>该模块可以将本地文件加密存储到IPFS,返回加密后的文件哈希值,若无对应权限请联系管理员获取.</font>
-          </Card>
-      </Col>
-      {/* <Col span={8}>
-        <Card title="" bordered={false}>Card content</Card>
-      </Col>
-      
-      <Col span={8}>
-        <Card title="" bordered={false}>Card content</Card>
-      </Col> */}
-    </Row>
-
-  </div>
             </div>
             
         )

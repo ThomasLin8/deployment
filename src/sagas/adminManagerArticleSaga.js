@@ -1,7 +1,7 @@
 import {put, take, call, select} from 'redux-saga/effects'
 import {get, post} from '../fetch/fetch'
 import {actionsTypes as IndexActionTypes} from '../reducers/globalStateReducer'
-import {actionTypes as ManagerTransactionsTypes} from '../reducers/adminManagerTags'
+import {actionTypes as ManagerTransactionsTypes} from '../reducers/AdminManagerTransactions'
 
 
 export function* fetch_transactions(pageNum) {

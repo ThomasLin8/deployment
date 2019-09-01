@@ -1,22 +1,22 @@
     import React, { Component, PropTypes } from 'react';
     import style from './style.css';
-    import { Table, Pagination, Button, Modal, Icon, Input } from  'antd';
+    import { Table, Pagination, Button, Modal, Icon, Input,Card } from  'antd';
     import PureRenderMixin from 'react-addons-pure-render-mixin'
     import { bindActionCreators } from 'redux'
     import { connect } from 'react-redux'
-    import { actions } from '../../reducers/adminManagerTags'
+    import { actions } from '../../reducers/AdminManagerTransactions'
     import crypto from 'crypto'
     const Blind = require('blind');
     const Search = Input.Search;
     const ipfsAPI = require('ipfs-api');
     //const Hash = require('ipfs-only-hash');
-    const ipfs = ipfsAPI({host: 'localhost', port: '5001', protocol: 'http'});
+    const ipfs = ipfsAPI('/ip4/39.100.155.67/tcp/5001');
     //api插件的引用
     const Web3 = require('web3');
     const InputDataDecoder = require('input-data-decoder-ethereum');
     //const simpleStorage = contract(SimpleStorageContract)
     //配置web3的httpprovider，采用infura
-    const web3 = new Web3(new Web3.providers.HttpProvider("http://127.0.0.1:8545"));
+    const web3 = new Web3(new Web3.providers.HttpProvider("http://39.100.155.67:8546"));
     const tokenAbi = [
         {
             "constant": false,
@@ -82,7 +82,7 @@ let aesDecrypt  = (encrypted) => {
 }
 
 
-    class AdminManagerComment extends Component {
+    class AdminManagerProve extends Component {
     
         constructor(props) {
             super(props);
@@ -105,6 +105,7 @@ let aesDecrypt  = (encrypted) => {
                 visible4: false,
                 visible5: false,
                 visible6: false,
+                visible11: false
               }
         }
         showModal = () => {
@@ -117,25 +118,47 @@ let aesDecrypt  = (encrypted) => {
             this.setState({
               visible1: false,
             });
-            this.setState({
-              visible6: false,
-            });
+            // this.setState({
+            //   visible6: false,
+            // });
           }
           handleCancel = (e) => {
             console.log(e);
             this.setState({
               visible1: false,
             });
+            // this.setState({
+            //   visible6: false,
+            // });
+          }
+
+          showModal1 = () => {
             this.setState({
-              visible6: false,
+              visible11: true,
             });
           }
+          handleOk1 = (e) => {
+            console.log(e);
+            this.setState({
+              visible11: false,
+            });
+
+          }
+          handleCancel1 = (e) => {
+            console.log(e);
+            this.setState({
+              visible11: false,
+            });
+
+          }
+
         render() {
             return (
                 <div>
                     <h3>交易存证</h3>
                     <br></br>
-                    <div>
+                    <div className={style.test}>
+             <Card title="文件方式验证" >        
             <label id="file">选择上传文件</label>
             <input type="file" ref="file" id="file" name="file" multiple="multiple" onChange={() => {
                 const file = this.refs.file.files[0];
@@ -147,24 +170,16 @@ let aesDecrypt  = (encrypted) => {
                   console.log('大小size',file.size);
                   this.setState({filetype:file.type});
                   this.setState({filesize:file.size});
-          
     
               }}/>
-            
-          </div>
 
-              <div>
-                <br></br>
-                 <h3>上传文件的文件名：{this.state.filename}</h3>
-                  <h3>上传文件的类型：{this.state.filetype}</h3>
-                  <h3>上传文件的大小：{this.state.filesize}</h3>
-
-    
-              </div>
-       { this.props.userInfo.ipfsdownload === 'true' ?
-          <div>
-          <br /><br />
-            <Button type="primary" shape="round" icon="upload" onClick={() => {
+                    <br></br>
+                  <h3>上传文件的文件名：{this.state.filename}</h3>
+                   <h3>上传文件的类型：{this.state.filetype}</h3>
+                   <h3>上传文件的大小：{this.state.filesize}</h3>
+                   <br></br>
+                   <Button type="primary" shape="round" icon="upload" onClick={() => {
+                     this.showModal1();
                 const file = this.refs.file.files[0];
                 const reader = new FileReader();
                 // reader.readAsDataURL(file);
@@ -188,34 +203,21 @@ let aesDecrypt  = (encrypted) => {
                //alert(ipfshash)
             
               }}>上传</Button>
-             {/* <Button type="primary" shape="round" icon="upload" onClick={() => {
-                const file = this.refs.file.files[0];
-                const reader = new FileReader();
-                // reader.readAsDataURL(file);
-                const uploadfiledata=reader.readAsArrayBuffer(file)
-                reader.onloadend = function(e) {
-        
-                  saveImageOnIpfs(reader).then((resdata) => {
-                    console.log('ipfsresdata',resdata);
-                    console.log('ipfs存储哈希值',resdata.hash);
-                    senddata = resdata.hash;
-                    //transaction = hash;
-                   
-                    this.setState({imgHash: resdata.hash})
-                    this.setState({ipfsname: resdata.path })
-                    this.setState({ipfsize: resdata.size });
-                  });
-    
-                }.bind(this);
-    
-              }}>将文件上传到IPFS</Button> */}
-<br></br>
+            </Card>  
 
-              {/* 
-              <h3>IPFS存储的文件Hash：{this.state.imgHash}</h3>
-                  <h3>IPFS存储的文件路径名：{this.state.ipfsname}</h3>
-                  <h3>IPFS存储的文件大小：{this.state.ipfsize}</h3> */}
+            <Modal
+          title="验证"
+          visible={this.state.visible11}
+          onOk={this.handleOk1}
+          onCancel={this.handleCancel1}
+        >
+
+      
+{ this.props.userInfo.ipfsdownload === 'true' ?
+          <div>
+
               <br></br>
+
               <Button  onClick={() => {    
                const ipfshash = this.state.imgHash;
                 console.log('ipfs存储哈希值imghash',ipfshash);
@@ -223,10 +225,10 @@ let aesDecrypt  = (encrypted) => {
                // alert(ipfshash.toString(''));   
                 this.props.ipfsFind(senddata)
                 //const show = this.props.ipfsshow
-                this.setState({visible2:true});
-                this.setState({visible3:false});
-                this.setState({visible4:false});
-                this.setState({visible5:false});
+                // this.setState({visible2:true});
+                // this.setState({visible3:false});
+                // this.setState({visible4:false});
+                // this.setState({visible5:false});
               }
             }
               >查询IPFS是否有存储</Button>
@@ -234,6 +236,36 @@ let aesDecrypt  = (encrypted) => {
           <h3>没有对应权限，请联系管理员获取</h3>
        }
 
+       <br></br>
+
+       { this.props.userInfo.localdownload === 'true' ?
+
+<div> 
+<br></br>
+<Button onClick={()=>{
+ this.props.bcFind(senddata);
+// const show = this.props.bcshow;
+ this.setState({visible2:false});
+ this.setState({visible3:true});
+ this.setState({visible4:false});
+ this.setState({visible5:false});
+}}>
+区块链验证
+</Button>
+<h3></h3>
+</div>
+:<h3>没有对应权限，请联系管理员获取</h3>
+
+}
+
+        </Modal>
+    
+              </div>
+
+
+
+
+{/* 
        {
          this.state.visible2 === true ?
          <div>
@@ -242,29 +274,11 @@ let aesDecrypt  = (encrypted) => {
          <h3>对应存储中的数据哈希值: {this.props.savedipfs}</h3>
          </div>
          :<div></div>
-       }
+       } */}
  
-       { this.props.userInfo.localdownload === 'true' ?
-
-      <div> 
-      <br></br>
-      <Button onClick={()=>{
-       this.props.bcFind(senddata);
-      // const show = this.props.bcshow;
-       this.setState({visible2:false});
-       this.setState({visible3:true});
-       this.setState({visible4:false});
-       this.setState({visible5:false});
-      }}>
-      区块链验证
-      </Button>
-     <h3></h3>
-      </div>
-      :<h3>没有对应权限，请联系管理员获取</h3>
       
-      }
 
-        {
+        {/* {
          this.state.visible3 === true  ?
          <div>
          <br></br>
@@ -273,13 +287,16 @@ let aesDecrypt  = (encrypted) => {
          <h3>区块链存储中的数据哈希值: {this.props.bcipfs}</h3>
          </div>
          :<div></div>
-       }
+       } */}
  
 
 
-  <br></br>
- <h3>加密后的哈希值查询IPFS存储</h3>
- <br></br>
+  <div style={{ background: '#ECECEC', padding: '30px' }}>
+  <Card title="加密后的哈希值查询 " style={{ width: 600 }}>
+  <h3> <font color='green'>加密后的哈希值查询IPFS存储</font> </h3> 
+
+<br></br>
+
 { this.props.userInfo.localdownload === 'true' ?
       <div>
        <Search
@@ -302,7 +319,8 @@ let aesDecrypt  = (encrypted) => {
                         }
                         
                       style={{ width: 500 }}
-                    />      
+                    />   
+       
       <br></br>
 
    
@@ -312,24 +330,12 @@ let aesDecrypt  = (encrypted) => {
             
             }
 
-     {
-         this.state.visible4 === true ?
-         <div>
-         <br></br>
-         <h3>上传文件的数据哈希值: {this.props.uploadipfs}</h3>
-         <h3>对应存储中的数据哈希值: {this.props.savedipfs}</h3>
-         </div>
-         :<div></div>
-       }
-
-
-
-      <br></br>
-       <h3>加密后的哈希值查询区块链存储</h3>
+ <br></br>
+<h3> <font color='green'>加密后的哈希值查询区块链存储 </font> </h3> 
        <br></br>
       { this.props.userInfo.localdownload === 'true' ?
-      <div>
-               <Search
+      <div >
+               <Search  
                     placeholder="输入加密过后的数据哈希值"
                     onSearch={value => {
                       const encrypted = value
@@ -374,8 +380,26 @@ let aesDecrypt  = (encrypted) => {
       :<h3>没有对应权限，请联系管理员获取</h3>
 
                       }
+</Card>  
 
-              {
+</div>
+
+     {/* {
+         this.state.visible4 === true ?
+         <div>
+         <br></br>
+         <h3>上传文件的数据哈希值: {this.props.uploadipfs}</h3>
+         <h3>对应存储中的数据哈希值: {this.props.savedipfs}</h3>
+         </div>
+         :<div></div>
+       } */}
+
+
+
+   <br></br>
+      
+<Card title="区块链信息验证 " style={{ width: 600 }}>
+              {/* {
                 this.state.visible5 === true  ?
                 <div>
                 <br></br>
@@ -384,10 +408,11 @@ let aesDecrypt  = (encrypted) => {
                 <h3>区块链存储中的数据哈希值: {this.props.bcipfs}</h3>
                 </div>
                 :<div></div>
-              }
+              } */}
 
                 <br></br>
-               <h3>信息验证</h3>
+
+               
                 <br></br>
                 <Search
                     placeholder="输入区块链交易哈希值"
@@ -428,11 +453,12 @@ let aesDecrypt  = (encrypted) => {
                     </Modal>
                    <br></br>
                    <br></br>
-                    
+                   </Card>
+
                 </div>
             )
         }
-    
+      
         componentDidMount() {
             //缓存
             if(this.props.list.length===0)
@@ -441,7 +467,7 @@ let aesDecrypt  = (encrypted) => {
     }
     
     
-    AdminManagerComment.propsTypes = {
+    AdminManagerProve.propsTypes = {
         pageNUm: PropTypes.number.isRequired,
         list: PropTypes.arrayOf(PropTypes.object),
         total:PropTypes.number.isRequired,
@@ -457,7 +483,7 @@ let aesDecrypt  = (encrypted) => {
         txgasused: PropTypes.number.isRequired,
     };
     
-    AdminManagerComment.defaultProps = {
+    AdminManagerProve.defaultProps = {
         pageNum: 1,
         list: [],
         total:0,
@@ -508,4 +534,4 @@ let aesDecrypt  = (encrypted) => {
     export default connect(
         mapStateToProps,
         mapDispatchToProps
-    )(AdminManagerComment)
+    )(AdminManagerProve)

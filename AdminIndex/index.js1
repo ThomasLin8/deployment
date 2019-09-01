@@ -1,0 +1,50 @@
+import React,  { Component } from 'react';
+import style from './style.css';
+import { Button, Input, Icon } from 'antd';
+
+const Web3 = require('web3');
+const InputDataDecoder = require('input-data-decoder-ethereum');
+const Search = Input.Search;
+
+//配置web3的httpprovider，采用infura
+const web3 = new Web3(new Web3.providers.HttpProvider("http://127.0.0.1:8545"));
+const decoder = new InputDataDecoder(tokenAbi);
+
+class AdminIndex extends Component {
+
+    render() {
+        return  (
+            <div>
+                <h1>交易信息查询</h1>
+                <br /><br />
+        <Search
+
+      placeholder="input search Tx Hash code"
+
+      onSearch={value => {   
+
+        web3.eth.getTransaction(value).then (
+        (rdata) => {
+          console.log('tx hash查找到的交易:',rdata);
+          console.log('块哈希值:', rdata.blockHash);
+          const trdata = rdata.input;
+          console.log('解码前数据:', trdata);
+          const dedata = decoder.decodeData(trdata);
+          console.log('解码得到的哈希值', dedata.inputs);
+          this.setState({blockChainHash: dedata.inputs});
+          this.setState({gasused: rdata.gas});
+          this.setState({tblockhash: rdata.blockHash});
+          this.setState({msgshow: true});
+        }
+        )
+      }
+    }
+    enterButton
+    />
+            </div>
+        )
+    }
+}
+
+export default AdminIndex;
+// 0xdeb2ce1e3ce86db77660e85aeaf8edb228181e65c5657bb45cb587ace7ad2023

@@ -4,10 +4,10 @@ import style from './style.css';
 import AdminMenu from '../../components/AdminMenu';
 import AdminIndex from '../AdminIndex';
 import AdminManagerUser from '../AdminManagerUser';
-import AdminManagerTags from '../AdminManagerTags';
-import AdminManagerArticle from '../AdminManagerArticle';
-import AdminManagerComment from '../AdminManagerComment';
-import AdminNewArticle from '../AdminNewArticle';
+import AdminManagerTransactions from '../AdminManagerTransactions';
+import AdminManagerLocal from '../AdminManagerLocal';
+import AdminManagerProve from '../AdminManagerProve';
+import blockchainupload from '../blockchainupload';
 import Detail from '../Detail';
 import NotFound from '../NotFound';
 import { bindActionCreators } from 'redux'
@@ -51,10 +51,10 @@ class Admin extends Component {
                                     <Switch>
                                         <Route exact path={url} component={AdminIndex}/>
                                         <Route path={`${url}/managerUser`} component={AdminManagerUser}/>
-                                        <Route path={`${url}/uploadfileipfs`} component={AdminManagerTags}/>
-                                        <Route path={`${url}/uploadfileblockchain`} component={AdminNewArticle}/>
-                                        <Route path={`${url}/localencryption`} component={AdminManagerArticle}/>
-                                        <Route path={`${url}/transactioninformation`} component={AdminManagerComment}/>
+                                        <Route path={`${url}/uploadfileipfs`} component={AdminManagerTransactions}/>
+                                        <Route path={`${url}/uploadfileblockchain`} component={blockchainupload}/>
+                                        <Route path={`${url}/localencryption`} component={AdminManagerLocal}/>
+                                        <Route path={`${url}/transactioninformation`} component={AdminManagerProve}/>
                                         <Route path={`${url}/detail`} component={Detail}/>
                                         <Route path={`${url}/logout`}/>
                                         <Route component={NotFound}/>

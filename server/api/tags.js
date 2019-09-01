@@ -45,7 +45,7 @@ const tokenAbi = [
     }
 ]
 const decoder = new InputDataDecoder(tokenAbi);
-const contractAddr = '0x28b1934ad7251eacb4a1e7a2b1ac968c7c0cdd3a';//合约地址
+const contractAddr = '0x692a70d2e424a56d2c6c27aa97d1a86395877b3a';//合约地址
 //0xF9448B279F57AD5073d996b1BF65a7d18878A599
 //"0xc411f680ae76e7457112ddd4a231a1ab71ed9b72";
 //"0x6f12fbbc9eba17d78a357f042682d6a0db57a1ae";
@@ -95,7 +95,7 @@ const mycontract = new web3.eth.Contract(tokenAbi,contractAddr,{
                      });
                      ipfstransaction.save()
                          .then(data => {
-                             responseClient(res, 200, 0, '添加成功', data);
+                             responseClient(res, 200, 0, '保存存储记录成功', data);
                          }).catch(err => {
                          throw err
                      })
@@ -207,7 +207,7 @@ if (result) {
             User.updateOne({username:username},({wallet:balance}))
                         .then(() => {
                             responseData.successshow = true; 
-                            responseClient(res, 200, 0, '扣费成功，区块链交易完成', responseData);
+                            responseClient(res, 200, 0, '扣费成功，正在上传到区块链,上传完成后返回相关信息', responseData);
                         }).catch(err => {
                         throw err
                     })

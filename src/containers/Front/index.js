@@ -9,7 +9,7 @@ import NotFound from '../NotFound'
 import { BackTop } from 'antd'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
-import { actions } from '../../reducers/adminManagerTags'
+import { actions } from '../../reducers/AdminManagerTransactions'
 import { actions as FrontActinos } from '../../reducers/frontReducer'
 //const { get_all_tags } = actions;
 const { get_article_list } = FrontActinos;

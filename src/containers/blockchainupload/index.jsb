@@ -9,10 +9,10 @@ import { connect } from 'react-redux'
 //import { actions } from '../../reducers/adminManagerUser'
 import '../Detail/style.css';
 import './style.css';
-import { actions } from '../../reducers/adminManagerTags'
+import { actions } from '../../reducers/AdminManagerTransactions'
 import dateFormat from 'dateformat'
 //import { actions2 } from '../../reducers/adminManagerArticle'
-//import { updateWallet } from '../../sagas/adminManagerTagsSaga';
+//import { updateWallet } from '../../sagas/AdminManagerTransactionsSaga';
 const {add_transaction,update_wallet,txhash_find} = actions;
 
 

@@ -91,7 +91,7 @@ let saveImageOnIpfs = (reader) => {
 }
 
 
-class adminManagerTags extends Component {
+class AdminManagerTransactions extends Component {
     constructor(props) {
         super(props)
         this.state = {
@@ -165,4 +165,4 @@ class adminManagerTags extends Component {
       }
     }
     
-export default adminManagerTags;
+export default AdminManagerTransactions;

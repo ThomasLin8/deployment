@@ -5,14 +5,14 @@ import { Table, Pagination, Button, Popconfirm, Input, Modal, Form, Radio,
 import PureRenderMixin from 'react-addons-pure-render-mixin'
 import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
-import { actions } from '../../reducers/adminManagerTags'
+import { actions } from '../../reducers/AdminManagerTransactions'
 import crypto from 'crypto'
 import Downloader from 'js-file-downloader';
 const Blind = require('blind');
 const Search = Input.Search;
 const download = require('downloadjs')
 const ipfsAPI = require('ipfs-api');
-const ipfs = ipfsAPI({host: '39.100.155.67', port: '5001', protocol: 'http'});
+const ipfs = ipfsAPI('/ip4/39.100.155.67/tcp/5001');
 //api插件的引用
 const Web3 = require('web3');
 const InputDataDecoder = require('input-data-decoder-ethereum');
@@ -85,7 +85,7 @@ return decrypted;
 }
 
 
-class adminManagerTags extends Component {
+class AdminManagerTransactions extends Component {
 
     constructor(props) {
         super(props);
@@ -135,7 +135,7 @@ class adminManagerTags extends Component {
                 return(
                 <div>
                     <span>
-                     <a href="javascript:;" onClick={() => {
+                    <a href="javascript:;" onClick={() => {
                         const deipfshash = new Blind({ encryptKey: 'PZ3oXv2v6Pq5HAPFI9NFbQ==' }).decrypt(text.enipfshash);
                         const fileUrl = "http://localhost:8080/ipfs/" + deipfshash;
                         const a = document.createElement('a');                     
@@ -148,6 +148,40 @@ class adminManagerTags extends Component {
 
 
                         }}>Download</a> 
+                    {/* <a href="javascript:;" onClick={() => {
+                         const deipfshash = new Blind({ encryptKey: 'PZ3oXv2v6Pq5HAPFI9NFbQ==' }).decrypt(text.enipfshash);
+                         console.log('解密后hash',deipfshash)
+                        //  ipfs.get(deipfshash, function (err, files) {
+                             
+                        //     files.forEach((file) => {
+                        //         const fileUrl = "http://localhost:8080/ipfs/" + deipfshash;
+ 
+                        //             // new Downloader({ 
+                        //             //     url: fileUrl
+                        //             // })
+                        //             // .then(function () {
+                        //             //     console.log('完成')
+                        //             // })
+                        //             // .catch(function (error) {
+                        //             //     console.log('失败')
+                        //             //     Called when an error occurred
+                        //             // });
+                        //     //  console.log('路径',file.path)
+                        //     //   console.log('O文件',file.content)
+                        //     //  // console.log(file.content.toString('utf8'))
+                        //     //  const blob = new Blob([new Uint8Array(file)]);
+                        //     //  console.log(blob)
+                        //     //   // const blob = new Blob();
+                        //     //   // console.log(blob)
+                        //     //   download(file.content,text._id);
+                        //       // ipfs.files.flush('/', (err) => {
+                        //       //   if (err) {
+                        //       //     console.error(err)
+                        //       //   }
+                        //       // })
+                        //     })
+                          })
+                    }}>Download</a> */}
                    
                    
                     <span className="ant-divider" />
@@ -200,13 +234,13 @@ class adminManagerTags extends Component {
 }
 
 
-adminManagerTags.propsTypes = {
+AdminManagerTransactions.propsTypes = {
     pageNUm: PropTypes.number.isRequired,
     list: PropTypes.arrayOf(PropTypes.object),
     total:PropTypes.number.isRequired
 }; 
 
-adminManagerTags.defaultProps = {
+AdminManagerTransactions.defaultProps = {
     pageNum: 1,
     list: [],
     total:0
@@ -236,4 +270,4 @@ function mapDispatchToProps(dispatch) {
 export default connect(
     mapStateToProps,
     mapDispatchToProps
-)(adminManagerTags)
+)(AdminManagerTransactions)
