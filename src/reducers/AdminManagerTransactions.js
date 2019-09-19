@@ -15,6 +15,7 @@ const initialState = {
     txbchash: [],
     txipfshash1:[],
     txgasused: [],
+    keyhash: [],
 };
 
 export const actionTypes = {
@@ -135,6 +136,7 @@ export function transactions(state = initialState, action) {
                 //bcutxhash: action.data.bcutxhash,
                // successshow: action.data.successshow,
                   balance: action.data.balance,
+                  keyhash: action.data.keyhash,
             }; 
             
         default:

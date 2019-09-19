@@ -25,7 +25,7 @@ const Web3 = require('web3');
 const InputDataDecoder = require('input-data-decoder-ethereum');
 //const simpleStorage = contract(SimpleStorageContract)
 //设置IPFS参数
-const ipfs = ipfsAPI('/ip4/39.100.155.67/tcp/5001');
+const ipfs = ipfsAPI('/ip4/127.0.0.1/tcp/5001');
 //使用的合约的abi信息
 const tokenAbi =[
 	{
@@ -63,7 +63,7 @@ const tokenAbi =[
 const privateKey = Buffer.from('061676AE52F57B2A90F859889C76FEFCF68EE4483A0E46D0E3D5BB4F4E620D13', 'hex')
 
 //配置web3的httpprovider，采用infura
-const web3 = new Web3(new Web3.providers.HttpProvider("http://39.100.155.67:8546"));
+const web3 = new Web3(new Web3.providers.HttpProvider("http://127.0.0.1:8546"));
 const decoder = new InputDataDecoder(tokenAbi);
 //let txlogs;
 let senddata = []; //发送数据
@@ -73,6 +73,8 @@ let transaction =[];
 let gasused;
 let cost;
 let isWriteSuccess;
+let walletshow;
+let keysize;
 
 const cardstyle = {
   width: '400px',
@@ -81,7 +83,7 @@ const cardstyle = {
   border: '1px solid #e8e8e8',
 };
 
-const contractAddr = '0xc0e0fcc5e072b6000e55b0cfbe317105213c98cc';//合约地址
+const contractAddr = '0xe1BF76A6973e5534Ea4BfaE71438f87eA376d752';//合约地址
 
 web3.eth.defaultAccount = '0x1aB1DC744b964f5c5023d92666D7f738Eb04B203';//设置使用的账户
 
@@ -106,7 +108,7 @@ let saveImageOnIpfs = (reader) => {
   })
 }
 let walletmoney
-let walletshow
+let keyhash
 
 class uploadfileblockchain extends Component {
     constructor(props) {
@@ -273,10 +275,13 @@ class uploadfileblockchain extends Component {
                     //transaction = hash;
                     const Bdate = dateFormat(new Date(), 'yyyy-mm-dd HH:MM:ss');
                     console.log("3时间",Bdate)
+                    keyhash = resdata.hash
+                    keysize = resdata.size
                     this.setState({loading1:false})
                     this.setState({imgHash: resdata.hash})
                     this.setState({ipfsname: resdata.path })
                     this.setState({ipfsize: resdata.size });
+                  
                   });
     
                 }.bind(this);
@@ -295,10 +300,10 @@ class uploadfileblockchain extends Component {
         >
          {/* <h1>文件已上传到IPFS</h1> */}
          {/* <font color='red'>IPFS存储的文件Hash：{this.state.imgHash} </font> */}
-         <h3>IPFS存储的文件Hash：{this.state.imgHash}</h3>
+         <h3>IPFS存储的文件Hash：{keyhash}</h3>
          {/* <h3>IPFS存储的文件路径名：{this.state.ipfsname}</h3> */}
          <br></br>
-         <h3>IPFS存储的文件大小：{this.state.ipfsize}</h3>
+         <h3>IPFS存储的文件大小：{keysize}</h3>
         </Modal>
 
         <Modal
@@ -313,14 +318,14 @@ class uploadfileblockchain extends Component {
          <h3>本次花销:{this.state.cost}</h3>
          {/* <h3>IPFS存储的文件路径名：{this.state.ipfsname}</h3> */}
          <br></br>
-         <h3>用户余额:{walletmoney}</h3> 
+         <h3>用户余额:{walletmoney}</h3>
          <br></br>
          <h3><font color='red'>该交易的Hash：{ttxhash}</font></h3>
          <br></br>
          <Button type="primary" shape="round" icon="download" onClick={() => {
                    
                    this.setState({readmsg:true})
-                   this.props.TxFind(ttxhash);
+                   this.props.TxFind(this.props.keyhash);
                    this.showModal3()
                  }}>区块链信息读取</Button>
         </Modal>
@@ -358,8 +363,8 @@ class uploadfileblockchain extends Component {
                         //  senddata.username = this.props.userInfo.username;
                         //  senddata.date = dateFormat(new Date(), 'yyyy-mm-dd HH:MM:ss');
                         const tdate = dateFormat(new Date(), 'yyyy-mm-dd HH:MM:ss');
-                        senddata="用户名: "+this.props.userInfo.username+"  ;文件名: "+this.state.filename+"  ;文件类型: "+this.state.filetype+"  ;文件大小: "+this.state.filesize
-                        +"  ;时间: "+tdate;
+                        senddata="用户名: "+this.props.userInfo.username+"  ;文件名: "+this.state.filename+"  ;文件类型: "+this.state.filetype+"  ;文件大小: "+keysize
+                        +"  ;IPFS哈希值: "+keyhash+"  ;时间: "+tdate;
                          console.log('发送sendata',senddata)
                       //编码使用合约的函数及参数用于后续的交易
                         const encoded = mycontract.methods.set(senddata).encodeABI();
@@ -377,27 +382,28 @@ class uploadfileblockchain extends Component {
                               data: encoded
                           });  
                           gasused = web3.utils.hexToNumber(web3.utils.toHex(estimategas));
-                          gasused = 2*gasused;
-                          console.log("sdfasf".gasused)
-                          cost = gasused/1000;
+                          
 
                         setTimeout(() => {
+                          gasused = 2*gasused;
+                       
+                          cost = gasused/1000;
                             console.log("估计花销的gas", gasused);
                             transaction.cost = cost;
                             
-                            this.props.updateWallet(transaction);
+                           
                             console.log("估计花销的cost", transaction.cost);
-                          }, 300);
+                        
                          
                          
                         //估计gas价格
                         const gasPrice = web3.eth.getGasPrice();
 
-                       setTimeout(() => {
-                         console.log('props余额',this.props.balance)                       
-                         walletmoney = this.props.balance
-                        if ( this.props.balance > 0)
-                        {
+                       //setTimeout(() => {
+                        // console.log('props余额',this.props.balance)                       
+                         
+                // if ( this.props.balance > 0)
+                //{
                         //配置交易信息rawTx
                           const rawTx = {
                               nonce: web3.utils.toHex(nonce),
@@ -426,24 +432,33 @@ class uploadfileblockchain extends Component {
                             tx.sign(privateKey);
                           //发送交易
                             const serializedTx = tx.serialize();
+                            transaction.serializedTx = serializedTx.toString('hex');
+                            console.log("发送的seri",transaction.serializedTx)
                             //console.log(serializedTx.toString('hex'));
-                            web3.eth.sendSignedTransaction("0x" + serializedTx.toString('hex'), function (err, hash) {
-                                console.log("交易的哈希值Tx: " + hash);
-                                ttxhash = hash; 
-                                transaction = hash;                     
-                            });  
+                            // web3.eth.sendSignedTransaction("0x" + serializedTx.toString('hex'), function (err, hash) {
+                            //     console.log("交易的哈希值Tx: " + hash);
+                            //     ttxhash = hash; 
+                            //     transaction = hash;                     
+                            // });  
+                            ttxhash = this.props.keyhash;
                             isWriteSuccess = 'true'
-                          }
-                          else {
-                            walletshow = 'true'
-                          }
+                          
+                          // else {
+                          //   walletshow = 'true'
+                          // }
+                         // setTimeout(() => {
+                            this.props.updateWallet(transaction);
+                            
+                         // }, 310);
                         setTimeout(() => {
+                          walletmoney = this.props.balance
+                          ttxhash = this.props.keyhash
                           this.showModal2();
                           this.uploadfinish();
-                        }, 100);
+                        }, 400);
                        
                         
-                       }, 600);
+                       //}, 600);
                         //const dgasprice = web3.utils.hexToNumber(gasPrice);
                        
                          
@@ -455,7 +470,8 @@ class uploadfileblockchain extends Component {
                         this.setState({cost:cost });
                         //this.setState({isWriteSuccess: true});
                         this.setState({msgshow: true});
-                       
+
+                       }, 300);  
                     
                       }}
                     >将文件hash写到区块链：</Button>
@@ -527,13 +543,15 @@ class uploadfileblockchain extends Component {
     txbchash: PropTypes.string.isRequired,
     txgasused: PropTypes.number.isRequired,
     balance: PropTypes.number.isRequired,
+    keyhash:PropTypes.string.isRequired,
   };
   
   uploadfileblockchain.defaultProps = {
     txipfshash:[],
     txbchash:[],
     txgasused:[],
-    balance:[]
+    balance:[],
+    keyhash:[],
   };
 //   S
   // const mapDispatchToProps = dispatch => {
@@ -561,13 +579,14 @@ function mapStateToProps(state) {
    //     transactions:state.admin.transactions,
    //     //wallet:state.admin.wallet
    // }
-   let {txipfshash,txbchash,txgasused,balance} = state.admin.transactions;
+   let {txipfshash,txbchash,txgasused,balance,keyhash} = state.admin.transactions;
    return {
        userInfo:state.globalState.userInfo,
        txipfshash,
        txbchash,
        txgasused,
-       balance
+       balance,
+       keyhash,
    }
 }
   function mapDispatchToProps(dispatch) {

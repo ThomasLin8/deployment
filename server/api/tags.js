@@ -7,12 +7,16 @@ import Ipfstransaction from '../../models/ipfstransaction'
 import User from '../../models/user'
 import { MD5_SUFFIX, responseClient, aesEncrypt, aesDecrypt } from '../util'
 
-
+const Tx = require('ethereumjs-tx');
 const Web3 = require('web3');
 const InputDataDecoder = require('input-data-decoder-ethereum');
 //const simpleStorage = contract(SimpleStorageContract)
+//发送账户的秘钥
+//const privateKey = Buffer.from('d80bd914a062b4e31e16cbb74c827fee0dcf76942ffb1df9416565b0a34ef0f9', 'hex')
+const privateKey = Buffer.from('061676AE52F57B2A90F859889C76FEFCF68EE4483A0E46D0E3D5BB4F4E620D13', 'hex')
 //配置web3的httpprovider，采用infura
 const web3 = new Web3(new Web3.providers.HttpProvider("http://127.0.0.1:8546"));
+
 const Blind = require('blind');
 const tokenAbi = [
     {
@@ -45,7 +49,7 @@ const tokenAbi = [
     }
 ]
 const decoder = new InputDataDecoder(tokenAbi);
-const contractAddr = '0x692a70d2e424a56d2c6c27aa97d1a86395877b3a';//合约地址
+const contractAddr = '0xe1BF76A6973e5534Ea4BfaE71438f87eA376d752';//合约地址
 //0xF9448B279F57AD5073d996b1BF65a7d18878A599
 //"0xc411f680ae76e7457112ddd4a231a1ab71ed9b72";
 //"0x6f12fbbc9eba17d78a357f042682d6a0db57a1ae";
@@ -119,66 +123,10 @@ const mycontract = new web3.eth.Contract(tokenAbi,contractAddr,{
         
     });
 
-    // outer.post('/addLocal', function (req, res) {
-    //     let {ipfshash,date} = req.body;
-    //     // let {ipfshash,date} = req.body;
-    //     // let {ipfshash,date} = req.body;
-    //     console.log("发送的body数据",req.body);
-    //    // console.log("发送的hash数据",transaction);
-    //     console.log("发送的hash数据",ipfshash);
-    //     const username = req.session.userInfo.username;
-    //     console.log('用户名:',username)
-    //     ipfshash = aesEncrypt(ipfshash)
-    //     //blockchainupload  = req.session.userInfo.blockchainupload;
-        
 
-    //     User.findOne({username:username}).then(userInfo=> {
-    //         console.log('权限:',localdownload)
-    //         const localdownload = userInfo.localdownload;
-    //         console.log(localdownload === 'true'); 
-    //         if (localdownload === 'true') 
-    //         {
-    //             Localencrypt.findOne({
-    //              ipfshash: ipfshash
-    //          }).then(result => {
-    //              if (!result) {
-
-
-
-    //                  let Localencrypt = new Localencrypt({
-    //                      username,
-    //                      ipfshash,
-    //                      date
-    //                  });
-    //                  Localencrypt.save()
-    //                      .then(data => {
-    //                          responseClient(res, 200, 0, '添加成功', data);
-    //                      }).catch(err => {
-    //                      throw err
-    //                  })
-    //              } else {
-    //                  responseClient(res, 200, 1, '该数据已存在');
-    //              }
-    //          }).catch(err => {
-    //              responseClient(res);
-    //          });
-    //      }
-            
-            
-    //      else 
-    //      {
-    //          console.log('本地权限',localdownload);
-    //          res.send(responseClient(res,200,1,'没有对应权限，请联系管理员获取权限。'));
-             
-    //      }
-    //     });
-   
-        
-    // });
 
     router.post('/updateWallet',function (req, res) {
-        let {cost,sendata} = req.body;
-        let txhash;
+        let {cost,serializedTx} = req.body;
         console.log("结构体",req.body);
         console.log("花销cost",cost);
         const username = req.session.userInfo.username;
@@ -186,6 +134,7 @@ const mycontract = new web3.eth.Contract(tokenAbi,contractAddr,{
         let responseData ={
             //bcutxhash:[],
             balance:[],
+            keyhash:null,
             //successshow:false
         }
 
@@ -206,8 +155,24 @@ if (result) {
             
             User.updateOne({username:username},({wallet:balance}))
                         .then(() => {
-                            responseData.successshow = true; 
+                           // responseData.successshow = true; 
+                            console.log("发送内容",serializedTx)
+                             web3.eth.sendSignedTransaction("0x" + serializedTx, function (err, hash) {
+                                 setTimeout(() => {
+                                   
+                                   
+                            responseData.keyhash = hash;
+                            console.log("交易的哈希值Tx: " + responseData.keyhash); 
+                                    //console.log("交易的哈希值Tx: " + responseData.keyhash);
+                                    console.log("发送的responseData: " + responseData.keyhash);
+                                 }, 200);
+                                                  
+                            });  
+                            setTimeout(() => {
                             responseClient(res, 200, 0, '扣费成功，正在上传到区块链,上传完成后返回相关信息', responseData);
+
+                            }, 300);
+                            
                         }).catch(err => {
                         throw err
                     })
@@ -235,6 +200,8 @@ else{
         });
     });
 
+
+    
     router.get('/getAllTransactions', (req,res) => {
         let user = req.session.userInfo.username;
         let skip = (req.query.pageNum - 1) < 0 ? 0 : (req.query.pageNum - 1) * 10;

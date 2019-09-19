@@ -284,6 +284,7 @@ export function* updateWalletFlow() {
             let data = {};
            // data.bcutxhash = res.data.bcutxhash;
            // data.successshow  = res.data.successshow;
+           data.keyhash = res.data.keyhash;
            data.balance = res.data.balance;
            console.log('余额',data)
             yield put({type:ManagerTransactionsTypes.RESOLVE_UPDATE_WALLET,data:data})
@@ -297,6 +298,7 @@ export function* updateWalletFlow() {
         }
     }
 }
+
 export function* deleteTransaction (ID) {
     yield put({type: IndexActionTypes.FETCH_START});
     try {
