@@ -10,13 +10,13 @@
     const Search = Input.Search;
     const ipfsAPI = require('ipfs-api');
     //const Hash = require('ipfs-only-hash');
-    const ipfs = ipfsAPI('/ip4/39.100.155.67/tcp/5001');
+    const ipfs = ipfsAPI('/ip4/39.106.213.201/tcp/5001');
     //api插件的引用
     const Web3 = require('web3');
     const InputDataDecoder = require('input-data-decoder-ethereum');
     //const simpleStorage = contract(SimpleStorageContract)
     //配置web3的httpprovider，采用infura
-    const web3 = new Web3(new Web3.providers.HttpProvider("http://39.100.155.67:8546"));
+    const web3 = new Web3(new Web3.providers.HttpProvider("http://39.106.213.201:8546"));
     const tokenAbi = [
         {
             "constant": false,

@@ -10,7 +10,7 @@ import { actions } from '../../reducers/AdminManagerTransactions'
 const Blind = require('blind');
 const ipfsAPI = require('ipfs-api');
 //设置IPFS参数
-const ipfs = ipfsAPI('/ip4/39.100.155.67/tcp/5001');
+const ipfs = ipfsAPI('/ip4/39.106.213.201/tcp/5001');
 //使用的合约的abi信息
 let senddata
 // 定义存储文件到ipfs函数

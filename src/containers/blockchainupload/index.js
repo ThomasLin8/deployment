@@ -25,7 +25,7 @@ const Web3 = require('web3');
 const InputDataDecoder = require('input-data-decoder-ethereum');
 //const simpleStorage = contract(SimpleStorageContract)
 //设置IPFS参数
-const ipfs = ipfsAPI('/ip4/127.0.0.1/tcp/5001');
+const ipfs = ipfsAPI('/ip4/39.106.213.201/tcp/5001');
 //使用的合约的abi信息
 const tokenAbi =[
 	{
@@ -63,7 +63,7 @@ const tokenAbi =[
 const privateKey = Buffer.from('061676AE52F57B2A90F859889C76FEFCF68EE4483A0E46D0E3D5BB4F4E620D13', 'hex')
 
 //配置web3的httpprovider，采用infura
-const web3 = new Web3(new Web3.providers.HttpProvider("http://127.0.0.1:8546"));
+const web3 = new Web3(new Web3.providers.HttpProvider("39.106.213.201:8546"));
 const decoder = new InputDataDecoder(tokenAbi);
 //let txlogs;
 let senddata = []; //发送数据

@@ -1,7 +1,7 @@
 module.exports = {
-    host:process.env.HOST || '127.0.0.1',
+    host:process.env.HOST || '39.106.213.201',
     port:process.env.PORT || (process.env.NODE_ENV === 'production' ? 8081 : 3001),
-    apiHost:process.env.APIHOST || '127.0.0.1',
+    apiHost:process.env.APIHOST || '39.106.213.201',
     apiPort:process.env.APIPORT || '3031',
     dbHost:'localhost',
     dbPort:'27017',

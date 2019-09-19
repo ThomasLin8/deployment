@@ -12,13 +12,13 @@ const Blind = require('blind');
 const Search = Input.Search;
 const download = require('downloadjs')
 const ipfsAPI = require('ipfs-api');
-const ipfs = ipfsAPI('/ip4/127.0.0.1/tcp/5001');
+const ipfs = ipfsAPI('/ip4/39.106.213.201/tcp/5001');
 //api插件的引用
 const Web3 = require('web3');
 const InputDataDecoder = require('input-data-decoder-ethereum');
 //const simpleStorage = contract(SimpleStorageContract)
 //配置web3的httpprovider，采用infura
-const web3 = new Web3(new Web3.providers.HttpProvider("http://127.0.0.1:8546"));
+const web3 = new Web3(new Web3.providers.HttpProvider("http://39.106.213.201:8546"));
 const tokenAbi = [
     {
         "constant": false,
@@ -137,7 +137,7 @@ class AdminManagerTransactions extends Component {
                     <span>
                     <a href="javascript:;" onClick={() => {
                         const deipfshash = new Blind({ encryptKey: 'PZ3oXv2v6Pq5HAPFI9NFbQ==' }).decrypt(text.enipfshash);
-                        const fileUrl = "http://localhost:8080/ipfs/" + deipfshash;
+                        const fileUrl = "http://39.106.213.201:8080/ipfs/" + deipfshash;
                         const a = document.createElement('a');                     
                         //var url = window.URL.createObjectURL(blob);
                         var filename = 'download';
