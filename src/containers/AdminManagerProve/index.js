@@ -190,7 +190,7 @@ let aesDecrypt  = (encrypted) => {
             >
               <Panel header="文件方式验证" key="1" style={customPanelStyle}>
 
-              <Card className='avatar' title="文件方式验证"  style={{height:'800px'}}>        
+              <Card className='avatar' title="文件方式验证" >        
           
             <input className='ui-upload' type="file" ref="file" id="file" name="file" multiple="multiple" onChange={() => {
                 const file = this.refs.file.files[0];
