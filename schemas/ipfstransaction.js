@@ -5,6 +5,7 @@ import mongoose from 'mongoose'
 //var myDate = new Date(); 
 module.exports = new mongoose.Schema({
     username:String,
+    filename:String,
     transaction:String,
     ipfshash:String,
     enipfshash:String,

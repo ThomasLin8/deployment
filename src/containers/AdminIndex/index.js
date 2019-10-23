@@ -1,45 +1,29 @@
 import React,  { Component,PropTypes } from 'react';
-import style from './style.css';
-import { Button, Input, Card, Col, Row} from 'antd';
+
+// import './Profile.less'
+import { Row, Col, Card, Icon,Input } from 'antd';
 import { actions  } from '../../reducers/adminManagerUser';
 import PureRenderMixin from 'react-addons-pure-render-mixin'
 import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
+import CountUp from 'react-countup';
+import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
+import ChartsCard from './Card/ChartsCard';
+import './Card.less';
 
+
+const profileImg = require('../../assets/img/profile.jpg');
 const { get_logout } = actions;
-const Search = Input.Search;
+
 const cardstyle = {
     width: '400px',
     margin: '30px',
     boxShadow: '0 4px 8px 0 rgba(0, 0, 0, 0.2)',
     border: '1px solid #e8e8e8',
   };
-// const menu = (
-//     <Menu onClick={handleMenuClick}>
-//       <Menu.Item key="1">
-//         <Icon type="user" />
-//         1st menu item
-//       </Menu.Item>
-//       <Menu.Item key="2">
-//         <Icon type="user" />
-//         2nd menu item
-//       </Menu.Item>
-//       <Menu.Item key="3">
-//         <Icon type="user" />
-//         3rd item
-//       </Menu.Item>
-//     </Menu>
-//   );
-
-//   function handleButtonClick(e) {
-//     message.info('Click on left button.');
-//     console.log('click left button', e);
-//   }
-  
-//   function handleMenuClick(e) {
-//     message.info('Click on menu item.');
-//     console.log('click', e);
-//   }
+const salescard= [
+    {"name":2008,"卫衣":214,"T恤":354,"衬衫":416},{"name":2009,"卫衣":395,"T恤":192,"衬衫":390},{"name":2010,"卫衣":260,"T恤":269,"衬衫":404},{"name":2011,"卫衣":323,"T恤":297,"衬衫":449},{"name":2012,"卫衣":215,"T恤":220,"衬衫":491},{"name":2013,"卫衣":365,"T恤":341,"衬衫":422},{"name":2014,"卫衣":218,"T恤":187,"衬衫":349},{"name":2015,"卫衣":248,"T恤":217,"衬衫":431}
+];
 
 class AdminIndex extends Component {
     constructor(props) {
@@ -47,56 +31,148 @@ class AdminIndex extends Component {
         this.shouldComponentUpdate = PureRenderMixin.shouldComponentUpdate.bind(this);
     }
     render() {
+
+        
+
         return  (
             
-            <div>
-                <h1>使用帮助</h1>
-                <br /><br />
+            <div  className="avatar">
 
+           <Row gutter={16}>
+              
+                <Col xs={24} sm={24} md={12} lg={6} xl={6} >
+                  <Card
+                    className='countCard'
+                    bordered={true}
+                    hoverable>
+                        
+                    <Icon className='iconWarp' style={{ color: 'blue' }} type={'sync'} />
+                    <div className='content'>
+                      <p className='title'>区块链节点</p>
+                      <p className='number'>
+                        <CountUp
+                          start={0}
+                          end={7}
+                          duration={2.75}
+                          useEasing
+                          useGrouping
+                          separator="," 
+                        />
+                      </p>
+                    </div>
+                  </Card>
+                </Col>
 
-                <div style={{ background: '#ECECEC', padding: '30px', margin:0 ,}}>
-    <Row gutter={16}>
-      <Col span={8}>
+                <Col xs={24} sm={24} md={12} lg={6} xl={6} >
+                  <Card
+                    className='countCard'
+                    bordered={true}
+                    hoverable>
+                    <Icon className='iconWarp' style={{ color: 'blue' }} type={'desktop'} />
+                    <div className='content'>
+                      <p className='title'>IPFS节点</p>
+                      <p className='number'>
+                        <CountUp
+                          start={0}
+                          end={7}
+                          duration={2.75}
+                          useEasing
+                          useGrouping
+                          separator="," 
+                        />
+                      </p>
+                    </div>
+                  </Card>
+                </Col>
 
-        <Card title="区块链文件存储" bordered={false}>
-        <font color='red'>该模块首先将文件的存储到IPFS,然后再存储到区块链,最后将存储记录存储到数据库,若无对应权限请联系管理员获取.</font>
-          </Card>
-      </Col>
+                <Col xs={24} sm={24} md={12} lg={6} xl={6} >
+                  <Card
+                    className='countCard'
+                    bordered={true}
+                    hoverable>
+                    <Icon className='iconWarp' style={{ color: 'blue' }} type={'team'} />
+                    <div className='content'>
+                      <p className='title'>用户数</p>
+                      <p className='number'>
+                        <CountUp
+                          start={0}
+                          end={2372}
+                          duration={2.75}
+                          useEasing
+                          useGrouping
+                          separator="," 
+                        />
+                      </p>
+                    </div>
+                  </Card>
+                </Col>
 
-      <Col span={8}>
-      <Card title="存储记录" bordered={false}>
-        <font color='red'>该模块可以查阅存储的记录,下载对应存储的文件,若无对应权限请联系管理员获取.</font>
-          </Card>
-      </Col>
+                <Col xs={24} sm={24} md={12} lg={6} xl={6} >
+                  <Card
+                    className='countCard'
+                    bordered={true}
+                    hoverable>
+                    <Icon className='iconWarp' style={{ color: 'blue' }} type={'check'} />
+                    <div className='content'>
+                      <p className='title'>赞赏</p>
+                      <p className='number'>
+                        <CountUp
+                          start={0}
+                          end={666  }
+                          duration={2.75}
+                          useEasing
+                          useGrouping
+                          separator="," 
+                        />
+                      </p>
+                    </div>
+                  </Card>
+                </Col>
+                
+     
+        </Row>
 
+            
+  
     
+    <Row>
+      <Col span={24}>
+        <Card bordered={true} bodyStyle={{
+          padding: '24px 36px 24px 0',
+        }}>
+          <div className='sales'>
+            <div className='title'>统计</div>
+            <ResponsiveContainer minHeight={360}>
+              <LineChart data={salescard}>
+                {/* <Legend verticalAlign="top"
+                  content={prop => {
+                    const { payload } = prop
+                    return (<ul className={classnames({ ['legend']: true, clearfix: true })}>
+                      {payload.map((item, key) => <li key={key}><span className={'radiusdot'} style={{ background: item.color }} />{item.value}</li>)}
+                    </ul>)
+                  }}
+                /> */}
+                <XAxis dataKey="name" axisLine={{ stroke: '#e5e5e5', strokeWidth: 1 }} tickLine={false} />
+                <YAxis axisLine={false} tickLine={false} />
+                <CartesianGrid vertical={false} stroke={'#e5e5e5'} strokeDasharray="3 3" />
+                {/* <Tooltip
+                  wrapperStyle={{ border: 'none', boxShadow: '4px 4px 40px rgba(0, 0, 0, 0.05)' }}
+                  content={content => {
+                    const list = content.payload.map((item, key) => <li key={key} className='tipitem'><span className='radiusdot' style={{ background: item.color }} />{`${item.name}:${item.value}`}</li>)
+                    return <div className='tooltip'><p className='tiptitle'>{content.label}</p><ul>{list}</ul></div>
+                  }}
+                /> */}
+                <Line type="monotone" dataKey="衬衫" stroke='#faaf76' strokeWidth={3} dot={{ fill: '#d897eb' }} activeDot={{ r: 5, strokeWidth: 0 }} />
+                <Line type="monotone" dataKey="T恤" stroke='#76cdd3' strokeWidth={3} dot={{ fill: '#f69899' }} activeDot={{ r: 5, strokeWidth: 0 }} />
+                <Line type="monotone" dataKey="卫衣" stroke='#f79992' strokeWidth={3} dot={{ fill: '#64ea91' }} activeDot={{ r: 5, strokeWidth: 0 }} />
+              </LineChart>
+            </ResponsiveContainer>
+          </div>
+        </Card>
+      </Col>
     </Row>
-
+    <ChartsCard  />
   </div>
-                <div style={{ background: '#ECECEC', padding: '30px' }}>
-    <Row gutter={16}>
-      <Col span={8}>
-
-        <Card title="信息验证" bordered={false}>
-        <font color='red'>该模块提供两种方式进行验证,分别为文件方式进行存储验证和加密哈希值进行存储验证,还提供区块链信息查询.若无对应权限请联系管理员获取.</font>
-          </Card>
-      </Col>
-      <Col span={8}>
-      <Card title="本地文件加密存储" bordered={false}>
-        <font color='red'>该模块可以将本地文件加密存储到IPFS,返回加密后的文件哈希值,若无对应权限请联系管理员获取.</font>
-          </Card>
-      </Col>
-      {/* <Col span={8}>
-        <Card title="" bordered={false}>Card content</Card>
-      </Col>
-      
-      <Col span={8}>
-        <Card title="" bordered={false}>Card content</Card>
-      </Col> */}
-    </Row>
-
-  </div>
-            </div>
             
         )
     }

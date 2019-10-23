@@ -7,7 +7,7 @@ const menus = [
     {url: '/managerUser', name: '用户管理', iconType: 'usergroup-delete'},
     {url: '/uploadfileblockchain', name: '区块链文件存储', iconType: 'file-text'},
      {url: '/uploadfileipfs', name: '存储记录', iconType: 'file-text'},
-    {url: '/localencryption', name: '本地文件加密存储', iconType: 'file-text'},
+    // {url: '/localencryption', name: '本地文件加密存储', iconType: 'file-text'},
     {url: '/transactioninformation', name: '信息验证', iconType: 'message'},
 ];
 

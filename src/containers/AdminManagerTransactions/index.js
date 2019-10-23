@@ -1,88 +1,22 @@
 import React, { Component, PropTypes } from 'react';
 import style from './style.css';
-import { Table, Pagination, Button, Popconfirm, Input, Modal, Form, Radio,
-    DatePicker, Col, TimePicker, Select, Cascader, InputNumber } from  'antd';
+import { Row, Col, Input, Icon, Cascader, DatePicker, Button, Tooltip, Popconfirm, Table, Pagination } from 'antd';
 import PureRenderMixin from 'react-addons-pure-render-mixin'
 import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
 import { actions } from '../../reducers/AdminManagerTransactions'
 import crypto from 'crypto'
-import Downloader from 'js-file-downloader';
 const Blind = require('blind');
 const Search = Input.Search;
-const download = require('downloadjs')
 const ipfsAPI = require('ipfs-api');
-const ipfs = ipfsAPI('/ip4/39.106.213.201/tcp/5001');
+const ipfs = ipfsAPI('/ip4/127.0.0.1/tcp/5001');
 //api插件的引用
-const Web3 = require('web3');
-const InputDataDecoder = require('input-data-decoder-ethereum');
-//const simpleStorage = contract(SimpleStorageContract)
-//配置web3的httpprovider，采用infura
-const web3 = new Web3(new Web3.providers.HttpProvider("http://39.106.213.201:8546"));
-const tokenAbi = [
-    {
-        "constant": false,
-        "inputs": [
-            {
-                "name": "x",
-                "type": "string"
-            }
-        ],
-        "name": "set",
-        "outputs": [],
-        "payable": false,
-        "stateMutability": "nonpayable",
-        "type": "function"
-    },
-    {
-        "constant": true,
-        "inputs": [],
-        "name": "get",
-        "outputs": [
-            {
-                "name": "",
-                "type": "string"
-            }
-        ],
-        "payable": false,
-        "stateMutability": "view",
-        "type": "function"
-    }
-]
-
-let senddata;
-const decoder = new InputDataDecoder(tokenAbi);
 
 
-const { get_all_transactions,ipfs_find,bc_find,delete_transction } = actions;
 
 
-let saveImageOnIpfs = (reader) => {
-return new Promise(function(resolve, reject) {
-  const buffer = Buffer.from(reader.result); //将存入的结果转成buff
-  ipfs.add(buffer).then((response) => {
-    console.log(response)
-    resolve(response[0].hash);//传回第一个函数的哈希值
-  }).catch((err) => {
-    console.error(err)
-    reject(err);
-  })
-})
-}
+const { get_all_transactions,ipfs_find,bc_find,delete_transction,get_file_transactions,get_enipfshash_transactions,get_txhash_transactions} = actions;
 
-// let  aesDecrypt = (encrypted) => {
-//     const decipher = crypto.createDecipher('aes192', '叶上初阳干宿雨，水面清圆，一一风荷举。')
-//     var decrypted = decipher.update(encrypted, 'hex', 'utf8')
-//     decrypted += decipher.final('utf8')
-//     return decrypted
-// }
-
-let aesDecrypt  = (encrypted) => {
-const decipher = crypto.createDecipher('aes192', 'a password');
-let decrypted = decipher.update(encrypted, 'hex', 'utf8');
-decrypted += decipher.final('utf8');
-return decrypted;
-}
 
 
 class AdminManagerTransactions extends Component {
@@ -97,9 +31,37 @@ class AdminManagerTransactions extends Component {
             msgshow: false,
             gasused: null,
             blockhash: null,
-           
+            dataSource: null,
+            filename:null,
+            
           }
     }
+
+
+
+    //搜索
+    onSearchFileName = (filename) => {
+         console.log(filename);
+        //const value = e.target.value;
+        this.props.getfiletransactions(filename)
+
+    };
+
+    onSearchTxhash = (txhash) => {
+        console.log(txhash);
+       //const value = e.target.value;
+       this.props.gettxhashtransactions(txhash)
+
+   };
+
+   onSearchEnipfshash = (enipfshash) => {
+    console.log(enipfshash);
+   //const value = e.target.value;
+   this.props.getenipfshashtransactions(enipfshash)
+
+};
+
+
    
     render() {
         const columns = [
@@ -108,11 +70,17 @@ class AdminManagerTransactions extends Component {
                 dataIndex: '_id',
                 key: 'ID',
             },
-            {
-            title: '用户',
-            dataIndex: 'username',
-            key: 'name'
-        },  {
+        //     {
+        //     title: '用户',
+        //     dataIndex: 'username',
+        //     key: 'name'
+        // },  
+        {
+            title: '文件名',
+            dataIndex: 'filename',
+            key: 'filename'
+        },  
+        {
             title: '存储的区块链地址',
             dataIndex: 'transaction',
             key: 'transaction',
@@ -137,7 +105,7 @@ class AdminManagerTransactions extends Component {
                     <span>
                     <a href="javascript:;" onClick={() => {
                         const deipfshash = new Blind({ encryptKey: 'PZ3oXv2v6Pq5HAPFI9NFbQ==' }).decrypt(text.enipfshash);
-                        const fileUrl = "http://39.106.213.201:8080/ipfs/" + deipfshash;
+                        const fileUrl = "http://localhost:8080/ipfs/" + deipfshash;
                         const a = document.createElement('a');                     
                         //var url = window.URL.createObjectURL(blob);
                         var filename = 'download';
@@ -148,40 +116,7 @@ class AdminManagerTransactions extends Component {
 
 
                         }}>Download</a> 
-                    {/* <a href="javascript:;" onClick={() => {
-                         const deipfshash = new Blind({ encryptKey: 'PZ3oXv2v6Pq5HAPFI9NFbQ==' }).decrypt(text.enipfshash);
-                         console.log('解密后hash',deipfshash)
-                        //  ipfs.get(deipfshash, function (err, files) {
-                             
-                        //     files.forEach((file) => {
-                        //         const fileUrl = "http://localhost:8080/ipfs/" + deipfshash;
- 
-                        //             // new Downloader({ 
-                        //             //     url: fileUrl
-                        //             // })
-                        //             // .then(function () {
-                        //             //     console.log('完成')
-                        //             // })
-                        //             // .catch(function (error) {
-                        //             //     console.log('失败')
-                        //             //     Called when an error occurred
-                        //             // });
-                        //     //  console.log('路径',file.path)
-                        //     //   console.log('O文件',file.content)
-                        //     //  // console.log(file.content.toString('utf8'))
-                        //     //  const blob = new Blob([new Uint8Array(file)]);
-                        //     //  console.log(blob)
-                        //     //   // const blob = new Blob();
-                        //     //   // console.log(blob)
-                        //     //   download(file.content,text._id);
-                        //       // ipfs.files.flush('/', (err) => {
-                        //       //   if (err) {
-                        //       //     console.error(err)
-                        //       //   }
-                        //       // })
-                        //     })
-                          })
-                    }}>Download</a> */}
+                  
                    
                    
                     <span className="ant-divider" />
@@ -199,19 +134,59 @@ class AdminManagerTransactions extends Component {
         }
         ];
         return (
-            <div>
+            // <div className="avatar">
            
 
-  
+  <div>
 
  
-                <h2>存储记录</h2>
+<h1 style={{textAlign:'center',color:'gray'}}>存储记录</h1>
+              <br></br>
+
+                <div>
+             
+                <div className='formBody'>
+                    <Row gutter={16}>
+                        <Col className="gutter-row" sm={8}>
+                        <h4 style={{marginLeft:'100px',color:'gray'}}>文件名查询</h4>
+                        <Search
+                                placeholder="输入文件名,回车查询"
+                                prefix={<Icon type="file" />}
+                            
+                                onSearch={this.onSearchFileName}
+                            />
+                        </Col>
+                        <Col className="gutter-row" sm={8}>
+                        <h4 style={{marginLeft:'100px',color:'gray'}}>数据哈希值查询</h4>
+                        <Search
+                                placeholder="输入数据哈希值,回车查询"
+                                prefix={<Icon type="file" />}
+                                onSearch={this.onSearchEnipfshash}
+                            />
+                        </Col>
+                        <Col className="gutter-row" sm={8}>
+                        <h4 style={{marginLeft:'100px',color:'gray'}}>存储地址查询</h4>
+                        <Search
+                                placeholder="输入存储地址,回车查询"
+                                prefix={<Icon type="file" />}
+                                onSearch={this.onSearchTxhash}
+                            />
+                        </Col>
                 
+                    </Row>
+                    <Row gutter={16}>
+                        <br></br>
+                        <Button type="primary" onClick={() => this.props.getAllTransactions()} style={{float:"right"}}>重置</Button>
+  
+                    </Row>
+                    <br></br>
+                    {this.setState({dataSource: this.props.list})}
                   <Table
                       className={style.table}
                       pagination={false}
                       columns={columns}
-                      dataSource={this.props.list}
+                      dataSource={this.state.dataSource}
+                      bordered
                       scroll={{ x: 1300 }}
                       />
                   <div>
@@ -222,6 +197,11 @@ class AdminManagerTransactions extends Component {
                           current={this.props.pageNum}
                           total={this.props.total}/>
                   </div>
+                </div>
+            </div>
+
+             
+                
             </div>
         )
     }
@@ -229,7 +209,13 @@ class AdminManagerTransactions extends Component {
     componentDidMount() {
         //缓存
         if(this.props.list.length===0)
+        {
             this.props.getAllTransactions();
+            
+            
+        }
+            
+
     }
 }
 
@@ -264,6 +250,9 @@ function mapDispatchToProps(dispatch) {
         ipfsFind: bindActionCreators(ipfs_find, dispatch),
         bcFind: bindActionCreators(bc_find, dispatch),
         DeleteTransaction:bindActionCreators(delete_transction, dispatch),
+        getfiletransactions:bindActionCreators(get_file_transactions, dispatch),
+        getenipfshashtransactions:bindActionCreators(get_enipfshash_transactions, dispatch),
+        gettxhashtransactions:bindActionCreators(get_txhash_transactions, dispatch)
     }
 }
 

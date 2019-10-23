@@ -7,7 +7,7 @@ import PureRenderMixin from 'react-addons-pure-render-mixin'
 import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
 //import { actions } from '../../reducers/adminManagerUser'
-import '../Detail/style.css';
+
 import './style.css';
 import { actions } from '../../reducers/AdminManagerTransactions'
 import { generateShowHourMinuteSecond } from 'antd/lib/time-picker';

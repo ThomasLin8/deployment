@@ -28,7 +28,9 @@ export const actionTypes = {
     'UPDATE_USER':"UPDATE_USER",
     'UPDATE_PASSWORD':"UPDATE_PASSWORD",
     "GET_USERINO":"GET_USERINO",
-    "RESOLVE_GET_USERINO":"RESOLVE_GET_USERINO"
+    "RESOLVE_GET_USERINO":"RESOLVE_GET_USERINO",
+    "GET_USERNAME_TRANSACTIONS":"GET_USERNAME_TRANSACTIONS",
+    "RESOLVE_GET_USERNAME_TRANSACTIONS": "RESOLVE_GET_USERNAME_TRANSACTIONS",
 
 
 };
@@ -38,6 +40,12 @@ export const actions = {
         return {
             type: actionTypes.GET_ALL_USER,
             pageNum:pageNum
+        }
+    },
+    get_username_transactions:function (username) {
+        return{
+            type:actionTypes.GET_USERNAME_TRANSACTIONS,
+            username
         }
     },
     update_user: function (data) {
@@ -78,6 +86,12 @@ export function users(state = initialState, action) {
             return {
                 list: action.data.list,
                 pageNum: action.data.pageNum,
+                total:action.data.total
+            };
+        case actionTypes.RESOLVE_GET_USERNAME_TRANSACTIONS:
+            return {
+                list: action.data.list,
+                //pageNum: action.data.pageNum,
                 total:action.data.total
             };
         case actionTypes.RESOLVE_GET_USERINO:

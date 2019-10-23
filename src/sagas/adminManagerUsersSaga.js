@@ -112,6 +112,40 @@ export function* getUserInfoFlow () {
         }
     }
 }
+
+export function* fetch_transactionsusername(username) {
+    yield put({type: IndexActionTypes.FETCH_START});
+    try {
+        return yield call(get, `/admin/getusernameTransactions?username=${username}`);
+        //return yield call(get, `/tags/getAllTransactions?pageNum=${pageNum}`);
+    } catch (err) {
+        yield put({type: IndexActionTypes.SET_MESSAGE, msgContent: '网络请求错误', msgType: 0});
+    } finally {
+        yield put({type: IndexActionTypes.FETCH_END})
+    }
+}
+
+
+export function* getusernameTransactionsFlow() {
+    while (true) {
+        let request = yield take(ManagerUserActionTypes.GET_USERNAME_TRANSACTIONS);
+       // let pageNum = request.pageNum||1;
+        let response = yield call(fetch_transactionsusername,request.username);
+        if(response&&response.code === 0){
+            for(let i = 0;i<response.data.list.length;i++){
+                response.data.list[i].key = i;
+            }
+            let data = {};
+            data.total = response.data.total;
+            data.list  = response.data.list;
+           // data.pageNum = Number.parseInt(pageNum);
+            yield put({type:ManagerUserActionTypes.RESOLVE_GET_USERNAME_TRANSACTIONS,data:data})
+        }else{
+            yield put({type:IndexActionTypes.SET_MESSAGE,msgContent:response.message,msgType:0});
+        }
+    }
+}
+
 export function* updateUser(data) {
     yield put({type: IndexActionTypes.FETCH_START});
     try {

@@ -36,6 +36,31 @@ router.get('/getUsers', (req,res) => {
                   })
         });
 });
+
+router.get('/getusernameTransactions', (req,res) => {
+    
+    const username = req.query.username;
+    console.log("效果查看",username)
+   // let user = req.session.userInfo.username;
+    //let skip = (req.query.pageNum - 1) < 0 ? 0 : (req.query.pageNum - 1) * 10;
+    let responseData = {
+        total: 0,
+        list: []
+    };
+    User.count()
+    .then(count => {
+        responseData.total = count;
+       User.find({username:username},'_id username type password wallet blockchainupload ipfsupload localupload blockchaindownload ipfsdownload localdownload')
+            .then((result) => {
+                  responseData.list = result;
+                  responseClient(res,200,0,'',responseData)
+            })
+            .catch(err => {
+                responseClient(res);
+            })
+  });
+});
+
 router.get('/delUser',(req,res) => {
     let username = req.query.username;
     console.log("req结构",req.query.username);

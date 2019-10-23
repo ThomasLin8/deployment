@@ -6,3 +6,15 @@
 .table~div{
     text-align: center;
 }
+.sc{
+    margin: 0 auto;
+}
+.avatar{
+    /* background: #DFFFDF */
+    /* text-align: center; */
+    /* // padding: 50px 0;
+    // line-height: 25px;
+   
+    // margin:0 auto;*/
+    background: url("../../../public/avatar_bg.jpg") no-repeat center center/cover; 
+  }

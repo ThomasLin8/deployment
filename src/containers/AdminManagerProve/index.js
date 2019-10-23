@@ -1,6 +1,6 @@
     import React, { Component, PropTypes } from 'react';
-    import style from './style.css';
-    import { Table, Pagination, Button, Modal, Icon, Input,Card } from  'antd';
+    import './style.less'
+    import { Collapse,  Button, Modal, Icon, Input,Card } from  'antd';
     import PureRenderMixin from 'react-addons-pure-render-mixin'
     import { bindActionCreators } from 'redux'
     import { connect } from 'react-redux'
@@ -10,13 +10,13 @@
     const Search = Input.Search;
     const ipfsAPI = require('ipfs-api');
     //const Hash = require('ipfs-only-hash');
-    const ipfs = ipfsAPI('/ip4/39.106.213.201/tcp/5001');
+    const ipfs = ipfsAPI('/ip4/127.0.0.1/tcp/5001');
     //api插件的引用
     const Web3 = require('web3');
     const InputDataDecoder = require('input-data-decoder-ethereum');
     //const simpleStorage = contract(SimpleStorageContract)
     //配置web3的httpprovider，采用infura
-    const web3 = new Web3(new Web3.providers.HttpProvider("http://39.106.213.201:8546"));
+    const web3 = new Web3(new Web3.providers.HttpProvider("http://127.0.0.1:8546"));
     const tokenAbi = [
         {
             "constant": false,
@@ -50,7 +50,7 @@
     let txfindata = [];
     let senddata;
     const decoder = new InputDataDecoder(tokenAbi);
-    
+    const Panel = Collapse.Panel;
     
     const { get_all_transactions,ipfs_find,bc_find,txhash_find } = actions;
     
@@ -67,12 +67,32 @@
       })
     }
 
-// let  aesDecrypt = (encrypted) => {
-//     const decipher = crypto.createDecipher('aes192', '叶上初阳干宿雨，水面清圆，一一风荷举。')
-//     var decrypted = decipher.update(encrypted, 'hex', 'utf8')
-//     decrypted += decipher.final('utf8')
-//     return decrypted
-// }
+    const customPanelStyle = {
+      background: '#f7f7f7',
+      borderRadius: 4,
+      marginBottom: 24,
+      border: 0,
+      overflow: 'hidden',
+      font:'30px'
+      
+    };
+    const cardstyle = {
+      background: "../../../public/avatar_bg.jpg" ,
+      width:'500px',
+      fontsize: '30px',
+      textoverflow: 'ellipsis',
+      maxwidth: '100%',
+      overflow: 'hidden',
+      whitespace: 'nowrap',
+      //color: rgba(0, 0, 0, 0.85),
+      fonteight: '500',
+      display: 'inline-block',
+      flex: '1',
+      textalign:'center',
+      //margin: ''
+    
+    }
+
 
 let aesDecrypt  = (encrypted) => {
   const decipher = crypto.createDecipher('aes192', 'a password');
@@ -154,13 +174,25 @@ let aesDecrypt  = (encrypted) => {
 
         render() {
             return (
+             
+             
                 <div>
-                    <h3>交易存证</h3>
-                    <br></br>
-                    <div className={style.test}>
-             <Card title="文件方式验证" >        
-            <label id="file">选择上传文件</label>
-            <input type="file" ref="file" id="file" name="file" multiple="multiple" onChange={() => {
+              <h1 style={{textAlign:'center',color:'gray'}}>文件存证</h1>
+              <br></br>
+              {/* <Card
+                                 style={{ backgroundColor:'#DFFFDF', }}
+                                bodyStyle={{height:'407px',overflow:'hidden'}}> */}
+                                <div className="collapse">
+                                <Collapse
+              bordered={false}
+              defaultActiveKey={['1']}
+              expandIcon={({ isActive }) => <Icon type="caret-right" rotate={isActive ? 90 : 0} />}
+            >
+              <Panel header="文件方式验证" key="1" style={customPanelStyle}>
+
+              <Card className='avatar' title="文件方式验证"  style={{height:'800px'}}>        
+          
+            <input className='ui-upload' type="file" ref="file" id="file" name="file" multiple="multiple" onChange={() => {
                 const file = this.refs.file.files[0];
                 //const uploadfiledata=reader.readAsArrayBuffer(file)
                // reader.onloadend = function(e) {
@@ -174,11 +206,11 @@ let aesDecrypt  = (encrypted) => {
               }}/>
 
                     <br></br>
-                  <h3>上传文件的文件名：{this.state.filename}</h3>
-                   <h3>上传文件的类型：{this.state.filetype}</h3>
-                   <h3>上传文件的大小：{this.state.filesize}</h3>
+                  <h2 style={{marginLeft:'420px'}}>上传文件的文件名：{this.state.filename}</h2>
+                   <h2 style={{marginLeft:'420px'}}>上传文件的类型：{this.state.filetype}</h2>
+                   <h2 style={{marginLeft:'420px'}}>上传文件的大小：{this.state.filesize}</h2>
                    <br></br>
-                   <Button type="primary" shape="round" icon="upload" onClick={() => {
+                   <Button style={{marginLeft:'490px',height:'30px',width:'120px'}} type="primary" shape="round" icon="upload" onClick={() => {
                      this.showModal1();
                 const file = this.refs.file.files[0];
                 const reader = new FileReader();
@@ -202,8 +234,133 @@ let aesDecrypt  = (encrypted) => {
                 console.log('ipfs存储哈希值imghash',typeof ipfshash);
                //alert(ipfshash)
             
-              }}>上传</Button>
+              }}>上传验证</Button>
             </Card>  
+              </Panel>
+              <Panel header="加密后的哈希值验证" key="2" style={customPanelStyle}>
+              <Card className='avatar' title="加密后的哈希值验证 " >
+  <h2 style={{marginLeft:'420px'}}> <font color='black'>加密后的哈希值查询IPFS存储</font> </h2> 
+
+
+{ this.props.userInfo.localdownload === 'true' ?
+      <div style={{marginLeft:'330px'}}>
+       <Search 
+                    placeholder="输入加密过后的数据哈希值"
+                    onSearch={value => {
+                      const encrypted = value
+                      console.log('搜索数据',encrypted)
+                      if(encrypted.length === 64){
+                      const deipfshash = new Blind({ encryptKey: 'PZ3oXv2v6Pq5HAPFI9NFbQ==' }).decrypt(encrypted);
+                      //const deipfshash = aesDecrypt(encrypted)
+                      this.props.ipfsFind(deipfshash)
+                     console.log('解码数据',deipfshash)
+                     this.setState({visible2:false});
+                    this.setState({visible3:false});
+                    this.setState({visible4:true});
+                    this.setState({visible5:false});
+                    }
+                    else{this.props.ipfsFind(encrypted)}
+                      }
+                        }
+                        
+                      style={{ width: 500 }}
+                    />   
+       
+      <br></br>
+
+   
+                                                  
+      </div>
+      :<h3>没有对应权限，请联系管理员获取</h3>
+            
+            }
+
+ <br></br>
+<h2 style={{marginLeft:'420px'}}> <font color='black'>加密后的哈希值查询区块链存储 </font> </h2> 
+ 
+      { this.props.userInfo.localdownload === 'true' ?
+      <div style={{marginLeft:'330px'}}>
+               <Search  
+                    placeholder="输入加密过后的数据哈希值"
+                    onSearch={value => {
+                      const encrypted = value
+                      console.log('搜索数据',encrypted)
+                      if(encrypted.length === 64){
+                      const deipfshash = new Blind({ encryptKey: 'PZ3oXv2v6Pq5HAPFI9NFbQ==' }).decrypt(encrypted);
+                      //const deipfshash = aesDecrypt(encrypted)
+                      this.props.bcFind(deipfshash)
+                     console.log('解码数据',deipfshash)
+                     this.setState({visible2:false});
+                     this.setState({visible3:false});
+                     this.setState({visible4:false});
+                     this.setState({visible5:true});
+                    }
+                    else{this.props.bcFind(encrypted)}
+                      }
+                        }
+                        
+                      style={{ width: 500 }}
+                    /> 
+  
+      <br></br>
+                                                  
+      </div>
+      :<h3>没有对应权限，请联系管理员获取</h3>
+
+                      }
+</Card>  
+              </Panel>
+              <Panel header="区块链信息验证" key="3" style={customPanelStyle}>
+              <Card className='avatar' title="区块链信息验证 " >
+<div style={{marginLeft:'330px'}}>
+                <Search 
+                    placeholder="输入区块链交易哈希值"
+                    onSearch={value => {
+                        this.setState({txhash: value});
+                        this.props.TxFind(value);
+                        this.setState({visible1:true});
+                        
+                      }
+                        }
+                        
+                      style={{ width: 500 }}
+                    />
+</div>
+</Card>
+                    <Modal
+                    title="区块链交易信息查询"
+                    visible={this.state.visible1}
+                    onOk={this.handleOk}
+                    onCancel={this.handleCancel}
+                    >
+                  <h3><font color="red">该交易的Hash：{this.state.txhash}</font></h3>
+                  <br></br>
+                  <h3>从区块链读取到的hash值：{this.props.txipfshash}</h3>
+                  <br></br>
+                  <h3>该交易的区块链Hash：{this.props.txbchash}</h3>
+                  <br></br>
+                  <h3>该交易消耗的gas：{this.props.txgasused}</h3>
+             
+                    </Modal>
+                    <Modal
+                    title="区块链交易信息查询"
+                    visible={this.state.visible6}
+                    onOk={this.handleOk}
+                    onCancel={this.handleCancel}
+                    >
+                  <h3>没有查询到相关的交易，请确认填写是否无误，交易是否存在</h3>
+                  
+                    </Modal>
+                   <br></br>
+                   <br></br>
+                   
+              </Panel>
+            </Collapse>,
+                                </div>
+                            {/* </Card> */}
+
+                    <br></br>
+                    <div >
 
             <Modal
           title="验证"
@@ -265,124 +422,10 @@ let aesDecrypt  = (encrypted) => {
 
 
 
-{/* 
-       {
-         this.state.visible2 === true ?
-         <div>
-         <br></br>
-         <h3>上传文件的数据哈希值: {this.props.uploadipfs}</h3>
-         <h3>对应存储中的数据哈希值: {this.props.savedipfs}</h3>
-         </div>
-         :<div></div>
-       } */}
- 
-      
 
-        {/* {
-         this.state.visible3 === true  ?
-         <div>
-         <br></br>
-         <h3>上传文件的数据哈希值: {this.props.bcuipfs}</h3>
-         <h3>对应存储的区块链地址: {this.props.bctxhash}</h3>
-         <h3>区块链存储中的数据哈希值: {this.props.bcipfs}</h3>
-         </div>
-         :<div></div>
-       } */}
  
 
 
-  <div style={{ background: '#ECECEC', padding: '30px' }}>
-  <Card title="加密后的哈希值查询 " style={{ width: 600 }}>
-  <h3> <font color='green'>加密后的哈希值查询IPFS存储</font> </h3> 
-
-<br></br>
-
-{ this.props.userInfo.localdownload === 'true' ?
-      <div>
-       <Search
-                    placeholder="输入加密过后的数据哈希值"
-                    onSearch={value => {
-                      const encrypted = value
-                      console.log('搜索数据',encrypted)
-                      if(encrypted.length === 64){
-                      const deipfshash = new Blind({ encryptKey: 'PZ3oXv2v6Pq5HAPFI9NFbQ==' }).decrypt(encrypted);
-                      //const deipfshash = aesDecrypt(encrypted)
-                      this.props.ipfsFind(deipfshash)
-                     console.log('解码数据',deipfshash)
-                     this.setState({visible2:false});
-                    this.setState({visible3:false});
-                    this.setState({visible4:true});
-                    this.setState({visible5:false});
-                    }
-                    else{this.props.ipfsFind(encrypted)}
-                      }
-                        }
-                        
-                      style={{ width: 500 }}
-                    />   
-       
-      <br></br>
-
-   
-                                                  
-      </div>
-      :<h3>没有对应权限，请联系管理员获取</h3>
-            
-            }
-
- <br></br>
-<h3> <font color='green'>加密后的哈希值查询区块链存储 </font> </h3> 
-       <br></br>
-      { this.props.userInfo.localdownload === 'true' ?
-      <div >
-               <Search  
-                    placeholder="输入加密过后的数据哈希值"
-                    onSearch={value => {
-                      const encrypted = value
-                      console.log('搜索数据',encrypted)
-                      if(encrypted.length === 64){
-                      const deipfshash = new Blind({ encryptKey: 'PZ3oXv2v6Pq5HAPFI9NFbQ==' }).decrypt(encrypted);
-                      //const deipfshash = aesDecrypt(encrypted)
-                      this.props.bcFind(deipfshash)
-                     console.log('解码数据',deipfshash)
-                     this.setState({visible2:false});
-                     this.setState({visible3:false});
-                     this.setState({visible4:false});
-                     this.setState({visible5:true});
-                    }
-                    else{this.props.bcFind(encrypted)}
-                      }
-                        }
-                        
-                      style={{ width: 500 }}
-                    /> 
-      {/* <Search
-                    placeholder="输入加密过后的数据哈希值"
-                    onSearch={value => {
-                      const encrypted = value
-                      console.log('搜索数据长度',encrypted.length)
-                      const deipfshash = new Blind({ encryptKey: 'PZ3oXv2v6Pq5HAPFI9NFbQ==' }).decrypt(encrypted);
-                      //const deipfshash = aesDecrypt(encrypted)
-                      this.props.bcFind(deipfshash)
-                    console.log('解码数据',deipfshash)
-                    this.setState({visible2:false});
-                    this.setState({visible3:false});
-                    this.setState({visible4:false});
-                    this.setState({visible5:true});
-                      }
-                        }
-                        
-                      style={{ width: 500 }}
-                    />       */}
-      <br></br>
-                                                  
-      </div>
-      :<h3>没有对应权限，请联系管理员获取</h3>
-
-                      }
-</Card>  
-
-</div>
 
      {/* {
          this.state.visible4 === true ?
@@ -398,62 +441,7 @@ let aesDecrypt  = (encrypted) => {
 
    <br></br>
       
-<Card title="区块链信息验证 " style={{ width: 600 }}>
-              {/* {
-                this.state.visible5 === true  ?
-                <div>
-                <br></br>
-                <h3>上传文件的数据哈希值: {this.props.bcuipfs}</h3>
-                <h3>对应存储的区块链地址: {this.props.bctxhash}</h3>
-                <h3>区块链存储中的数据哈希值: {this.props.bcipfs}</h3>
-                </div>
-                :<div></div>
-              } */}
 
-                <br></br>
-
-               
-                <br></br>
-                <Search
-                    placeholder="输入区块链交易哈希值"
-                    onSearch={value => {
-                        this.setState({txhash: value});
-                        this.props.TxFind(value);
-                        this.setState({visible1:true});
-                        
-                      }
-                        }
-                        
-                      style={{ width: 500 }}
-                    />
-
-                    <Modal
-                    title="区块链交易信息查询"
-                    visible={this.state.visible1}
-                    onOk={this.handleOk}
-                    onCancel={this.handleCancel}
-                    >
-                  <h3><font color="red">该交易的Hash：{this.state.txhash}</font></h3>
-                  <br></br>
-                  <h3>从区块链读取到的hash值：{this.props.txipfshash}</h3>
-                  <br></br>
-                  <h3>该交易的区块链Hash：{this.props.txbchash}</h3>
-                  <br></br>
-                  <h3>该交易消耗的gas：{this.props.txgasused}</h3>
-             
-                    </Modal>
-                    <Modal
-                    title="区块链交易信息查询"
-                    visible={this.state.visible6}
-                    onOk={this.handleOk}
-                    onCancel={this.handleCancel}
-                    >
-                  <h3>没有查询到相关的交易，请确认填写是否无误，交易是否存在</h3>
-                  
-                    </Modal>
-                   <br></br>
-                   <br></br>
-                   </Card>
 
                 </div>
             )

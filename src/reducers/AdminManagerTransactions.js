@@ -22,7 +22,13 @@ export const actionTypes = {
     TXHASH_FIND:"TXHASH_FIND",
     RESOLVE_TXHASH_FIND:"RESOLVE_TXHASH_FIND",
     GET_ALL_TRANSACTIONS:"GET_ALL_TRANSACTIONS",
+    GET_FILENAME_TRANSACTIONS:"GET_FILENAME_TRANSACTIONS",
+    GET_ENIPFSHASH_TRANSACTIONS:"GET_ENIPFSHASH_TRANSACTIONS",
+    GET_TXHASH_TRANSACTIONS:"GET_TXHASH_TRANSACTIONS",
     RESOLVE_GET_ALL_TRANSACTIONS: "RESOLVE_GET_ALL_TRANSACTIONS",
+    RESOLVE_GET_FILENAME_TRANSACTIONS: "RESOLVE_GET_FILENAME_TRANSACTIONS",
+    RESOLVE_GET_ENIPFSHASH_TRANSACTIONS: "RESOLVE_GET_ENIPFSHASH_TRANSACTIONS",
+    RESOLVE_GET_TXHASH_TRANSACTIONS: "RESOLVE_GET_TXHASH_TRANSACTIONS",
     DELETE_TAG:"DELETE_TAG",
     UPDATE_WALLET:"UPDATE_WALLET",
     RESOLVE_UPDATE_WALLET:" RESOLVE_UPDATE_WALLET",
@@ -41,6 +47,24 @@ export const actions = {
         return{
             type:actionTypes.GET_ALL_TRANSACTIONS,
             pageNum:pageNum
+        }
+    },
+    get_file_transactions:function (filename) {
+        return{
+            type:actionTypes.GET_FILENAME_TRANSACTIONS,
+            filename:filename
+        }
+    },
+    get_enipfshash_transactions:function (enipfshash) {
+        return{
+            type:actionTypes.GET_ENIPFSHASH_TRANSACTIONS,
+            enipfshash:enipfshash
+        }
+    },
+    get_txhash_transactions:function (txhash) {
+        return{
+            type:actionTypes.GET_TXHASH_TRANSACTIONS,
+            txhash:txhash
         }
     },
     // delete_tag:function (name) {
@@ -92,7 +116,7 @@ export const actions = {
         return{
             type:actionTypes.TXHASH_FIND,
             txhash
-        }
+        }   
     },
 
 };
@@ -105,6 +129,28 @@ export function transactions(state = initialState, action) {
                 pageNum: action.data.pageNum,
                 total:action.data.total
             };
+        case actionTypes.RESOLVE_GET_FILENAME_TRANSACTIONS:
+            return {
+                list: action.data.list,
+                //pageNum: action.data.pageNum,
+                total:action.data.total
+            };
+
+        case actionTypes.RESOLVE_GET_ENIPFSHASH_TRANSACTIONS:
+            return {
+                list: action.data.list,
+                //pageNum: action.data.pageNum,
+                total:action.data.total
+            };
+
+         case actionTypes.RESOLVE_GET_TXHASH_TRANSACTIONS:
+            return {
+                list: action.data.list,
+                //pageNum: action.data.pageNum,
+                total:action.data.total
+            };
+
+
 
         case actionTypes.RESOLVE_IPFS_FIND:
             return {

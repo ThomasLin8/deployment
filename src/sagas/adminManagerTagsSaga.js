@@ -49,6 +49,106 @@ export function* getAllTransactionsFlow() {
         }
     }
 }
+
+export function* fetch_transactionsfilename(filename) {
+    yield put({type: IndexActionTypes.FETCH_START});
+    try {
+        return yield call(get, `/admin/tags/getfilenameTransactions?filename=${filename}`);
+        //return yield call(get, `/tags/getAllTransactions?pageNum=${pageNum}`);
+    } catch (err) {
+        yield put({type: IndexActionTypes.SET_MESSAGE, msgContent: '网络请求错误', msgType: 0});
+    } finally {
+        yield put({type: IndexActionTypes.FETCH_END})
+    }
+}
+
+
+export function* getfileTransactionsFlow() {
+    while (true) {
+        let request = yield take(ManagerTransactionsTypes.GET_FILENAME_TRANSACTIONS);
+       // let pageNum = request.pageNum||1;
+        let response = yield call(fetch_transactionsfilename,request.filename);
+        if(response&&response.code === 0){
+            for(let i = 0;i<response.data.list.length;i++){
+                response.data.list[i].key = i;
+            }
+            let data = {};
+            data.total = response.data.total;
+            data.list  = response.data.list;
+           // data.pageNum = Number.parseInt(pageNum);
+            yield put({type:ManagerTransactionsTypes.RESOLVE_GET_FILENAME_TRANSACTIONS,data:data})
+        }else{
+            yield put({type:IndexActionTypes.SET_MESSAGE,msgContent:response.message,msgType:0});
+        }
+    }
+}
+
+export function* fetch_transactionsenipfshash(enipfshash) {
+    yield put({type: IndexActionTypes.FETCH_START});
+    try {
+        return yield call(get, `/admin/tags/getenipfshashTransactions?enipfshash=${enipfshash}`);
+        //return yield call(get, `/tags/getAllTransactions?pageNum=${pageNum}`);
+    } catch (err) {
+        yield put({type: IndexActionTypes.SET_MESSAGE, msgContent: '网络请求错误', msgType: 0});
+    } finally {
+        yield put({type: IndexActionTypes.FETCH_END})
+    }
+}
+
+
+export function* getenipfshashTransactionsFlow() {
+    while (true) {
+        let request = yield take(ManagerTransactionsTypes.GET_ENIPFSHASH_TRANSACTIONS);
+       // let pageNum = request.pageNum||1;
+        let response = yield call(fetch_transactionsenipfshash,request.enipfshash);
+        if(response&&response.code === 0){
+            for(let i = 0;i<response.data.list.length;i++){
+                response.data.list[i].key = i;
+            }
+            let data = {};
+            data.total = response.data.total;
+            data.list  = response.data.list;
+           // data.pageNum = Number.parseInt(pageNum);
+            yield put({type:ManagerTransactionsTypes.RESOLVE_GET_ENIPFSHASH_TRANSACTIONS,data:data})
+        }else{
+            yield put({type:IndexActionTypes.SET_MESSAGE,msgContent:response.message,msgType:0});
+        }
+    }
+}
+
+export function* fetch_transactionstxhash(txhash) {
+    yield put({type: IndexActionTypes.FETCH_START});
+    try {
+        return yield call(get, `/admin/tags/gettxhashTransactions?txhash=${txhash}`);
+        //return yield call(get, `/tags/getAllTransactions?pageNum=${pageNum}`);
+    } catch (err) {
+        yield put({type: IndexActionTypes.SET_MESSAGE, msgContent: '网络请求错误', msgType: 0});
+    } finally {
+        yield put({type: IndexActionTypes.FETCH_END})
+    }
+}
+
+
+export function* gettxhashTransactionsFlow() {
+    while (true) {
+        let request = yield take(ManagerTransactionsTypes.GET_TXHASH_TRANSACTIONS);
+       // let pageNum = request.pageNum||1;
+        let response = yield call(fetch_transactionstxhash,request.txhash);
+        if(response&&response.code === 0){
+            for(let i = 0;i<response.data.list.length;i++){
+                response.data.list[i].key = i;
+            }
+            let data = {};
+            data.total = response.data.total;
+            data.list  = response.data.list;
+           // data.pageNum = Number.parseInt(pageNum);
+            yield put({type:ManagerTransactionsTypes.RESOLVE_GET_TXHASH_TRANSACTIONS,data:data})
+        }else{
+            yield put({type:IndexActionTypes.SET_MESSAGE,msgContent:response.message,msgType:0});
+        }
+    }
+}
+
 export function* addTransaction(transaction) {
     yield put({type: IndexActionTypes.FETCH_START});
     try {

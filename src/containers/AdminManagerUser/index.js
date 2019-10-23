@@ -1,7 +1,6 @@
 import React, { Component, PropTypes } from 'react';
 import style from './style.css';
-import { Table, Pagination, Button, Popconfirm, Input, Modal, Form, Radio,
-    DatePicker, Col, TimePicker, Select, Cascader, InputNumber } from  'antd';
+import { Form,  Select, Icon, Popconfirm, Table, Pagination,Input,Row,Col,Button, Avatar} from 'antd';
 import PureRenderMixin from 'react-addons-pure-render-mixin'
 import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
@@ -9,7 +8,9 @@ import { actions } from '../../reducers/adminManagerUser'
 import {CollectionCreateForm } from './CollectionCreateForm';
 //import { Button } from 'antd/lib/radio';
 //import DeleteButton from '../../components/DeleteButton'
-const { get_all_users,delete_user,update_user,update_password } = actions;
+const { get_all_users,delete_user,update_user,update_password ,get_username_transactions} = actions;
+const Search = Input.Search;
+
 const FormItem = Form.Item;
 const Option = Select.Option;
 
@@ -99,33 +100,42 @@ class AdminManagerUser extends Component {
     //     this.props.updateUser(value)
     // }
 
+    onSearchUser = (username) => {
+      console.log(username);
+      //const value = e.target.value;
+      this.props.getusernametransactions(username)
+    }
     
 
     render() {
-      const columns = [{
-        title: '姓名',
+      const columns = [
+        {
+        title: '用户名',
         width: 100,
       //  fixed: 'left',
         dataIndex: 'username',
         key: 'name'
-    }, {
+    }, 
+    {
         title: 'ID',
         width: 100,
       //  fixed: 'left',
         dataIndex: '_id',
         key: 'ID',
-    }, {
+    }, 
+    {
         title: '密码',
         width: 100,
        // fixed: 'left',
         dataIndex: 'password',
         key: 'password',
-    }, {
+    }, 
+    {
         title: '身份',
         width: 100,
-        fixed: 'left',
+        //fixed: 'left',
         dataIndex: 'type',
-        key: 'address',
+        key: 'type',
     },
     {
       title: '钱包余额',
@@ -196,18 +206,32 @@ class AdminManagerUser extends Component {
     }
 ]
         return (
+            // <div className="avatar">
             <div>
+ <h1 style={{textAlign:'center',color:'gray'}}>用户管理</h1>
+              <br></br>
+              
+               <br></br>
+                    <Row gutter={16}>
+                        <Col className="gutter-row" sm={8}>
+                        <h4 style={{marginLeft:'50px',color:'gray'}}>用户名查询</h4>
+                        <Search     style={{ width: 200}}
+                                placeholder="输入用户名,回车查询"
+                                prefix={<Icon type="user" />}
+                              
+                                onSearch={this.onSearchUser}
+                            />
+                        </Col>
+                       
                 
-                <h2>用户管理</h2>
-                <div>
-                    <Input size="large"  placeholder="请输入删除的用户名,回车结束输入" 
-                    onPressEnter={(e) => {
-                        const username= e.target.value;
-                        console.log("输入的值",username);
-                        this.props.updatePassword(username);}}
-
-                    />
-                    </div>
+                    </Row>
+                    <Row gutter={16}>
+                        <br></br>
+                        <Button type="primary" onClick={() => this.props.getAllUsers()} style={{float:"right"}}>重置</Button>
+  
+                    </Row>
+                    <br></br>
+                 
                 
                   <Table
                   
@@ -215,6 +239,7 @@ class AdminManagerUser extends Component {
                       pagination={false}
                       columns={columns}
                       dataSource={this.props.list}
+                      bordered
                       scroll={{ x: 1300 }}
                       
                       />
@@ -287,6 +312,7 @@ function mapDispatchToProps(dispatch) {
         deleteUser: bindActionCreators(delete_user, dispatch),
         updateUser: bindActionCreators(update_user, dispatch),
         updatePassword: bindActionCreators(update_password, dispatch),
+        getusernametransactions: bindActionCreators(get_username_transactions, dispatch),
     }
 }
 

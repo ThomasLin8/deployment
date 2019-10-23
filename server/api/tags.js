@@ -6,6 +6,7 @@ import Ipfstransaction from '../../models/ipfstransaction'
 //import {responseClient} from '../util'
 import User from '../../models/user'
 import { MD5_SUFFIX, responseClient, aesEncrypt, aesDecrypt } from '../util'
+import { setTimeout } from 'timers';
 
 const Tx = require('ethereumjs-tx');
 const Web3 = require('web3');
@@ -63,13 +64,14 @@ const mycontract = new web3.eth.Contract(tokenAbi,contractAddr,{
 //const urlencodedParser = bodyParser.urlencoded({ extended: false })
 
      router.post('/addTransaction', function (req, res) {
-        let {transaction,ipfshash,date} = req.body;
+        let {transaction,ipfshash,date,filename} = req.body;
         // let {ipfshash,date} = req.body;
         // let {ipfshash,date} = req.body;
        const enipfshash = new Blind({ encryptKey: 'PZ3oXv2v6Pq5HAPFI9NFbQ==' }).encrypt(ipfshash);
        // const  enipfshash = aesEncrypt(ipfshash);
         console.log("发送的body数据",req.body);
         console.log("发送的hash数据",transaction);
+        console.log("发送的filename数据",filename);
         console.log("发送的enipfshash数据",enipfshash);
         const username = req.session.userInfo.username;
         console.log('用户名:',username)
@@ -84,7 +86,7 @@ const mycontract = new web3.eth.Contract(tokenAbi,contractAddr,{
             if (localupload === 'true') 
             {
              Ipfstransaction.findOne({
-                 transaction: transaction
+                 ipfshash: ipfshash
              }).then(result => {
                  if (!result) {
 
@@ -92,6 +94,7 @@ const mycontract = new web3.eth.Contract(tokenAbi,contractAddr,{
 
                      let ipfstransaction = new Ipfstransaction({
                          username,
+                         filename,
                          transaction,
                          ipfshash,
                          enipfshash,
@@ -212,7 +215,7 @@ else{
         Ipfstransaction.count()
         .then(count => {
             responseData.total = count;
-           Ipfstransaction.find({username: user},'_id username transaction enipfshash date', {skip:skip, limit:10})
+           Ipfstransaction.find({username: user},'_id username filename transaction enipfshash date', {skip:skip, limit:10})
                 .then((result) => {
                       responseData.list = result;
                       responseClient(res,200,0,'',responseData)
@@ -222,6 +225,78 @@ else{
                 })
       });
 });
+
+
+router.get('/getfilenameTransactions', (req,res) => {
+    
+    const filename = req.query.filename;
+    console.log("效果查看",filename)
+   // let user = req.session.userInfo.username;
+    //let skip = (req.query.pageNum - 1) < 0 ? 0 : (req.query.pageNum - 1) * 10;
+    let responseData = {
+        total: 0,
+        list: []
+    };
+    Ipfstransaction.count()
+    .then(count => {
+        responseData.total = count;
+       Ipfstransaction.find({filename: filename},'_id username filename transaction enipfshash date')
+            .then((result) => {
+                  responseData.list = result;
+                  responseClient(res,200,0,'',responseData)
+            })
+            .catch(err => {
+                responseClient(res);
+            })
+  });
+});
+
+router.get('/getenipfshashTransactions', (req,res) => {
+    const enipfshash = req.query.enipfshash;
+    console.log(enipfshash)
+   // let user = req.session.userInfo.username;
+    //let skip = (req.query.pageNum - 1) < 0 ? 0 : (req.query.pageNum - 1) * 10;
+    let responseData = {
+        total: 0,
+        list: []
+    };
+    Ipfstransaction.count()
+    .then(count => {
+        responseData.total = count;
+       Ipfstransaction.find({enipfshash: enipfshash},'_id username filename transaction enipfshash date')
+            .then((result) => {
+                  responseData.list = result;
+                  responseClient(res,200,0,'',responseData)
+            })
+            .catch(err => {
+                responseClient(res);
+            })
+  });
+});
+
+router.get('/gettxhashTransactions', (req,res) => {
+    const txhash = req.query.txhash;
+    console.log(txhash)
+   // let user = req.session.userInfo.username;
+    //let skip = (req.query.pageNum - 1) < 0 ? 0 : (req.query.pageNum - 1) * 10;
+    let responseData = {
+        total: 0,
+        list: []
+    };
+    Ipfstransaction.count()
+    .then(count => {
+        responseData.total = count;
+       Ipfstransaction.find({transaction: txhash},'_id username filename transaction enipfshash date')
+            .then((result) => {
+                  responseData.list = result;
+                  responseClient(res,200,0,'',responseData)
+            })
+            .catch(err => {
+                responseClient(res);
+            })
+  });
+});
+
 
 router.get('/IPFSfind', function (req, res) {
     let ipfshash = req.query.ipfshash;
@@ -273,7 +348,7 @@ router.get('/IPFSfind', function (req, res) {
 router.get('/Bcfind', function (req, res) {
     let ipfshash = req.query.ipfshash;
     //console.log("发送的body数据",req.body);   
-    console.log("发送的ipfshash数据",ipfshash);  
+    console.log("发送的ipfshash数据x",ipfshash);  
     const username = req.session.userInfo.username;
     console.log('用户名:',username)
     //console.log('判断相等',imghash === ipfshash)
@@ -311,13 +386,32 @@ router.get('/Bcfind', function (req, res) {
                     console.log(typeof bchash);
                      console.log('解码数据',bchash);
                      console.log('传来的ipfshash',ipfshash)
-                     console.log(ipfshash === bchash)
-                     responseData.bcipfs = bchash;
-                     if(ipfshash === bchash)
+                     const ans = bchash.match("哈希值: +[a-zA-Z0-9]+");
+                       //const ans = bchash.match(reg)
+                       console.log("正则后",ans[0])
+                       const newhash = "哈希值: "+ipfshash
+                     setTimeout(() => {
+                        const ans = bchash.match("哈希值: +[a-zA-Z0-9]+");
+                       // const ans = bchash.match(reg)
+                        console.log("正则后",ans)
+                        const newhash = "哈希值: "+ipfshash
+                        console.log('新哈希',newhash)
+                        console.log("判断",newhash === ans[0])
+                        responseData.bcipfs = bchash;
+                     }, 300);
                     
-                      responseClient(res, 200, 0, '区块链已存储了该文件的Hash,验证为真',responseData);
-                     else
-                      responseClient(res, 200, 1, '区块链未存储了该文件的Hash,验证为假');
+                     setTimeout(() => {
+                        if(newhash === ans[0])
+                       { 
+                        console.log("判断",ipfshash === bchash)
+                        responseData.bcipfs = bchash;
+                        responseClient(res, 200, 0, '区块链已存储了该文件的Hash,验证为真',responseData);
+                    }
+                       else
+                        responseClient(res, 200, 1, '区块链未存储了该文件的Hash,验证为假',);
+                         
+                     }, 500);
+                   
 
                     })
                  
