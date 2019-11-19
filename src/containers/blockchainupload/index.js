@@ -58,7 +58,7 @@ const tokenAbi =[
 const privateKey = Buffer.from('061676AE52F57B2A90F859889C76FEFCF68EE4483A0E46D0E3D5BB4F4E620D13', 'hex')
 
 //配置web3的httpprovider
-const web3 = new Web3(new Web3.providers.HttpProvider("http://127.0.0.1:8546"));
+const web3 = new Web3(new Web3.providers.HttpProvider("http://47.94.130.17:8546"));
 
 let senddata = []; //发送数据
 let nonce; //nonce
@@ -456,6 +456,7 @@ class uploadfileblockchain extends Component {
           title="文件已上传到IPFS,相关信息如下"
           visible={this.state.visible1}
           onOk={this.blockchainupload}
+          onte
           onCancel={this.handleCancel}
         >
          {/* <h1>文件已上传到IPFS</h1> */}

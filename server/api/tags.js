@@ -16,7 +16,7 @@ const InputDataDecoder = require('input-data-decoder-ethereum');
 //const privateKey = Buffer.from('d80bd914a062b4e31e16cbb74c827fee0dcf76942ffb1df9416565b0a34ef0f9', 'hex')
 const privateKey = Buffer.from('061676AE52F57B2A90F859889C76FEFCF68EE4483A0E46D0E3D5BB4F4E620D13', 'hex')
 //配置web3的httpprovider，采用infura
-const web3 = new Web3(new Web3.providers.HttpProvider("http://127.0.0.1:8546"));
+const web3 = new Web3(new Web3.providers.HttpProvider("http://47.94.130.17:8546"));
 
 const Blind = require('blind');
 const tokenAbi = [
@@ -415,26 +415,7 @@ router.get('/Bcfind', function (req, res) {
 
                     })
                  
-                 //console.log('交易信息获得',)
-                 //responseClient(res, 200, 0, '区块链已存储了该文件的Hash,验证为真');
-                //   console.log('查询结果',result.transaction)
-                //   txhash = result.transaction
-                // web3.eth.getTransaction(result.transaction).then (
-                //     (err,rdata) => {
-                //         if(err)
-                //         {responseClient(res, 200, 0, '查询出错，请再试一次');}
-                //         else{
-                //         console.log('tx hash查找到的交易:',rdata);
-                //         const trdata = rdata.input;
-                //           console.log('解码前数据:', trdata);
-                //           const dedata = decoder.decodeData(trdata);
-                //         if(dedata === ipfshash)
-                //         {responseClient(res, 200, 0, '区块链已存储了该文件的Hash,验证为真');}
-                //         else
-                //         {responseClient(res, 200, 1, '区块链未存储了该文件的Hash,验证为假');}
-                //     }
-                // }
-                //  )
+               
                
                 
              } else {

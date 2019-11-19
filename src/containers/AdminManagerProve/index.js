@@ -16,7 +16,7 @@
     const InputDataDecoder = require('input-data-decoder-ethereum');
     //const simpleStorage = contract(SimpleStorageContract)
     //配置web3的httpprovider，采用infura
-    const web3 = new Web3(new Web3.providers.HttpProvider("http://127.0.0.1:8546"));
+    const web3 = new Web3(new Web3.providers.HttpProvider("http://47.94.130.17:8546"));
     const tokenAbi = [
         {
             "constant": false,
