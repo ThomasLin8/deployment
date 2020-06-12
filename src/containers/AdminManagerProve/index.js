@@ -22,7 +22,7 @@ const ipfs = ipfsAPI('/ip4/127.0.0.1/tcp/5001');
 const Web3 = require('web3');
 
  //配置web3的httpprovider,本地为127.0.0.1,云服务器为云服务器外网IP
-const web3 = new Web3(new Web3.providers.HttpProvider("http://127.0.0.1:8546"));
+const web3 = new Web3(new Web3.providers.HttpProvider("http://39.99.215.93:8546"));
 
 //合约的abi编码,每次调用合约都必须有的,可用remix等获取合约编码
 const tokenAbi = [

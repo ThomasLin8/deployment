@@ -9,7 +9,7 @@ import crypto from 'crypto'
 const Blind = require('blind');
 const Search = Input.Search;
 const ipfsAPI = require('ipfs-api');
-const ipfs = ipfsAPI('/ip4/127.0.0.1/tcp/5001');
+const ipfs = ipfsAPI('/ip4/39.99.215.93/tcp/5001');
 //api插件的引用
 
 
@@ -96,7 +96,7 @@ class AdminManagerTransactions extends Component {
                         {/* //先将加密哈希值解密,然后利用ipfs下载对应的文件 */}
                     <a href="javascript:;" onClick={() => {
                         const deipfshash = new Blind({ encryptKey: 'PZ3oXv2v6Pq5HAPFI9NFbQ==' }).decrypt(text.enipfshash);
-                        const fileUrl = "http://localhost:8080/ipfs/" + deipfshash;
+                        const fileUrl = "http://39.99.215.93:8080/ipfs/" + deipfshash;
                         const a = document.createElement('a');                     
                         var filename = 'download';
                         a.href = fileUrl;

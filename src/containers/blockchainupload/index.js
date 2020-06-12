@@ -18,7 +18,7 @@ const Web3 = require('web3');
 const InputDataDecoder = require('input-data-decoder-ethereum');
 
 //设置IPFS参数
-const ipfs = ipfsAPI('/ip4/127.0.0.1/tcp/5001');
+const ipfs = ipfsAPI('/ip4/39.99.215.93/tcp/5001');
 //使用的合约的abi信息
 const tokenAbi =[
 	{
@@ -55,7 +55,7 @@ const tokenAbi =[
 const privateKey = Buffer.from('061676AE52F57B2A90F859889C76FEFCF68EE4483A0E46D0E3D5BB4F4E620D13', 'hex')
 
 //配置web3的httpprovider
-const web3 = new Web3(new Web3.providers.HttpProvider("http://127.0.0.1:8546"));
+const web3 = new Web3(new Web3.providers.HttpProvider("http://39.99.215.93:8546"));
 
 let senddata = []; //发送数据
 let nonce; //nonce
@@ -70,7 +70,7 @@ let formdata
 let isWriteSuccess
 
 //合约地址
-const contractAddr = '0xe1BF76A6973e5534Ea4BfaE71438f87eA376d752';
+const contractAddr = '0xe0A2318f72fCe73AE9Cc207014fF361Cf3E05680';
 //设置使用的账户
 web3.eth.defaultAccount = '0x1aB1DC744b964f5c5023d92666D7f738Eb04B203';
 
