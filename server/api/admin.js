@@ -15,8 +15,8 @@ router.use( (req,res,next) => {
 });
 
  router.use('/tags', require('./tags'));
-// router.use('/article', require('./article'));
 
+// 获取所有用户的数据库记录
 router.get('/getUsers', (req,res) => {
     let skip = (req.query.pageNum - 1) < 0 ? 0 : (req.query.pageNum - 1) * 10;
     let responseData = {
@@ -37,12 +37,11 @@ router.get('/getUsers', (req,res) => {
         });
 });
 
+//利用获得的用户名查找数据库中的对应交易
 router.get('/getusernameTransactions', (req,res) => {
     
     const username = req.query.username;
     console.log("效果查看",username)
-   // let user = req.session.userInfo.username;
-    //let skip = (req.query.pageNum - 1) < 0 ? 0 : (req.query.pageNum - 1) * 10;
     let responseData = {
         total: 0,
         list: []
@@ -61,6 +60,7 @@ router.get('/getusernameTransactions', (req,res) => {
   });
 });
 
+// 删除用户
 router.get('/delUser',(req,res) => {
     let username = req.query.username;
     console.log("req结构",req.query.username);
@@ -77,7 +77,7 @@ router.get('/delUser',(req,res) => {
 });
 
 
-
+// 更新用户
     router.post('/updateUser',(req, res) => {
         const username = req.body.username;
         const {password, type, blockchainupload, wallet, ipfsupload, localupload, blockchaindownload, ipfsdownload, localdownload, } = req.body;
@@ -103,13 +103,11 @@ router.get('/delUser',(req,res) => {
             responseClient(res);
         });
     });
+
+//获取登录的用户信息
     router.get('/getUserInfo', (req,res) => {
         let username = req.query.username;
     console.log('用户名',username)
-    // User.findOne({username: username})
-    //     .then(count => {
-    //           //responseData.total = count;
-    //           if(count){
         User.findOne({username: username})
               .then(userInfo => {
                 let data = {};
@@ -130,9 +128,9 @@ router.get('/delUser',(req,res) => {
                   .catch(err => {
                       responseClient(res);
                   })
-        //         }
-        // });
 });
+
+//更新密码
     router.post('/updatePassword',(req, res) => {
         const username = req.session.userInfo.username;
         let {  password,newpassword, passwordRe } = req.body;
@@ -167,9 +165,8 @@ router.get('/delUser',(req,res) => {
        
     });
     
+// 用户登出
     router.get('/logout',function (req,res) {
-       
-       // responseClient(res,200,0,'成功退出');
         req.session.destroy();
         
         if(! req.session === undefined){
@@ -177,7 +174,6 @@ router.get('/delUser',(req,res) => {
         }else{
             responseClient(res,200,0,'成功退出')
         }
-        //res.redirect('/');
        
     });
 module.exports = router;

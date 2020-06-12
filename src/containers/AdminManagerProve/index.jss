@@ -5,26 +5,18 @@ import PureRenderMixin from 'react-addons-pure-render-mixin'
 import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
 import { actions } from '../../reducers/AdminManagerTransactions'
-
- //crypt,blind加密组件导入
 import crypto from 'crypto'
 const Blind = require('blind');
-
- // antd组件的定义
 const Search = Input.Search;
-const Panel = Collapse.Panel;
-
-//IPFS插件引用
 const ipfsAPI = require('ipfs-api');
+//const Hash = require('ipfs-only-hash');
 const ipfs = ipfsAPI('/ip4/127.0.0.1/tcp/5001');
-
-//web3 api插件的引用
+//api插件的引用
 const Web3 = require('web3');
-
- //配置web3的httpprovider,本地为127.0.0.1,云服务器为云服务器外网IP
-const web3 = new Web3(new Web3.providers.HttpProvider("http://127.0.0.1:8546"));
-
-//合约的abi编码,每次调用合约都必须有的,可用remix等获取合约编码
+const InputDataDecoder = require('input-data-decoder-ethereum');
+//const simpleStorage = contract(SimpleStorageContract)
+//配置web3的httpprovider，采用infura
+const web3 = new Web3(new Web3.providers.HttpProvider("http://47.94.130.17:8546"));
 const tokenAbi = [
     {
         "constant": false,
@@ -55,32 +47,13 @@ const tokenAbi = [
         "type": "function"
     }
 ]
+let txfindata = [];
+let senddata;
+const decoder = new InputDataDecoder(tokenAbi);
+const Panel = Collapse.Panel;
 
-// 合约数据的加密插件导入和定义使用
-     const InputDataDecoder = require('input-data-decoder-ethereum');
-     const decoder = new InputDataDecoder(tokenAbi);
-
-
-let senddata; //发送数据
-
-// panel显示的标题
-const classify = [
-  "文件方式验证",
-  "加密哈希值方式验证",
-  "区块链存储信息查询"
-];
-
-//card中显示的文字
-const text = [
-"文件方式验证提供文件的存证,首先点击页面内验证按钮,在弹出的窗口中上传需要验证的文件,文件上传后,将弹出窗口,可选择IPFS验证和区块链验证,IPFS验证将验证文件是否已经存入IPFS,区块链验证将验证文件是否存入区块链中。",
-"加密哈希值方式验证提供加密哈希值的存证,首先点击页面内验证按钮,在弹出的窗口中输入需要验证的哈希值,完成输入后将弹出窗口,可选择IPFS验证和区块链验证,IPFS验证将验证文件是否已经存入IPFS,区块链验证将验证文件是否存入区块链中。",
-"区块链存储信息查询提供区块链存储信息的查询,首先将需要查询的哈希值输入下方搜索框,完成输入后即可获得相关存储信息。"
-];
-
-// reducer的action引入
 const { get_all_transactions,ipfs_find,bc_find,txhash_find } = actions;
 
-// 定义文件存储到IPFS的函数
 let  saveImageOnIpfs = (reader) => {
   return new Promise(function(resolve, reject) {
     const buffer = Buffer.from(reader.result); //将存入的结果转成buff
@@ -94,7 +67,33 @@ let  saveImageOnIpfs = (reader) => {
   })
 }
 
-// 定义解密函数
+const customPanelStyle = {
+  background: '#f7f7f7',
+  borderRadius: 4,
+  marginBottom: 24,
+  border: 0,
+  overflow: 'hidden',
+  font:'30px'
+  
+};
+const cardstyle = {
+  background: "../../../public/avatar_bg.jpg" ,
+  width:'500px',
+  fontsize: '30px',
+  textoverflow: 'ellipsis',
+  maxwidth: '100%',
+  overflow: 'hidden',
+  whitespace: 'nowrap',
+  //color: rgba(0, 0, 0, 0.85),
+  fonteight: '500',
+  display: 'inline-block',
+  flex: '1',
+  textalign:'center',
+  //margin: ''
+
+}
+
+
 let aesDecrypt  = (encrypted) => {
 const decipher = crypto.createDecipher('aes192', 'a password');
 let decrypted = decipher.update(encrypted, 'hex', 'utf8');
@@ -126,10 +125,7 @@ class AdminManagerProve extends Component {
             visible4: false,
             visible5: false,
             visible6: false,
-            visible11: false,
-            visiblefile:false,
-            visiblehash:false,
-            
+            visible11: false
           }
     }
     showModal = () => {
@@ -156,7 +152,6 @@ class AdminManagerProve extends Component {
         // });
       }
 
-      // 区块链交易信息查询的modal控制,showModal1是打开,handleok1是关闭,handleCancle1是取消
       showModal1 = () => {
         this.setState({
           visible11: true,
@@ -176,140 +171,32 @@ class AdminManagerProve extends Component {
         });
 
       }
-      showModalfile = () => {
-        this.setState({visiblefile:true})
-      }
 
-      handleCancelfile = () => {
-        this.setState({visiblefile:false})
-      }
-
-      handleCancelhash = () => {
-        this.setState({visiblehash:false})
-      }
-
-//文件存证方式的函数
-      fileprove=() => {
-        this.showModal1();
-        const file = this.refs.file.files[0];
-        const reader = new FileReader();
-        // reader.readAsDataURL(file);
-        reader.readAsArrayBuffer(file)
-        reader.onloadend = function(e) {
-          console.log(reader);
-          
-          saveImageOnIpfs(reader).then((resdata) => {
-            console.log('ipfsresdata',resdata);
-            console.log('ipfs存储哈希值',resdata.hash);
-            senddata = resdata.hash;
-            //transaction = hash;
-            
-            this.setState({imgHash: resdata.hash})
-            this.setState({ipfsname: resdata.path })
-            this.setState({ipfsize: resdata.size });
-          });
-        }.bind(this);
-        const ipfshash = this.state.imgHash;
-        console.log('ipfs存储哈希值imghash',typeof ipfshash);
-        //alert(ipfshash)
-  
-    }
-
-
-// Panel 面板
-      Panel(){
-        let panel = text.map(function(item,index){
-            return(
-                <Panel header={classify[index]} key={index}>
-                    <div>{item}</div>
-                    <p className="author">{author[index]}</p>
-                </Panel>
-            )
-        });
-        return panel;
-      }
-      
     render() {
         return (
          
          
             <div>
-
-              
-          <h1 style={{textAlign:'center',color:'gray'}}>信息存证</h1>
-                           <br></br>
-                            <br></br>
-                            <br></br>
-                            <br></br>
-                            <br></br>
-                            <br></br>
-                    
-                       
-                        <Card className="testcards"
-                            >
-                      
-                           
-                            <div className="collapse">
-                                <Collapse accordion defaultActiveKey={"0"}>
-  
-                                <Panel header={classify[0]} >
-                                    <div>文件方式验证提供文件的存证,首先点击页面内验证按钮,在弹出的窗口中上传需要验证的文件,文件上传后,将弹出窗口,可选择IPFS验证和区块链验证,IPFS验证将验证文件是否已经存入IPFS,区块链验证将验证文件是否存入区块链中。</div>
-                                    <br></br>
-                                    <Button type="dashed" style={{float:"right",height:40,width:80}} 
-                                    onClick={() => {  
-                                    this.showModalfile()
-                                    }}
-                                    >验证</Button>
-                            
-                                </Panel>
-
-                                <Panel header={classify[1]} >
-                                    <div>加密哈希值方式验证提供加密哈希值的存证,首先点击页面内验证按钮,在弹出的窗口中输入需要验证的哈希值,完成输入后将弹出窗口,可选择IPFS验证和区块链验证,在对应的验证搜索框输入加密哈希值即可完成验证.IPFS验证将验证文件是否已经存入IPFS,区块链验证将验证文件是否存入区块链中。</div>
-                                    <br></br>
-                                    <Button type="dashed" style={{float:"right",height:40,width:80}} 
-                                    onClick={() => {  
-                                    this.setState({visiblehash:true})
-                                    }}
-                                    >验证</Button>
-                            
-                                </Panel>
-
-                                <Panel header={classify[2]} >
-                                    <div>区块链存储信息查询提供区块链存储信息的查询,首先将需要查询的哈希值输入下方搜索框,完成输入后即可获得相关存储信息。</div>
-                                    <br></br>
-                                    <Search 
-                                      placeholder="输入区块链交易哈希值"
-                                      onSearch={value => {
-                                          this.setState({txhash: value});
-                                          this.props.TxFind(value);
-                                          this.setState({visible1:true});
-                                          
-                                        }
-                                          }
-                    
-                  style={{ width: 500 }}
-                />
-                            
-                                </Panel>
-                                </Collapse>
-                            </div>
-                        </Card>
-
-
+          <h1 style={{textAlign:'center',color:'gray'}}>文件存证</h1>
           <br></br>
-                            <div>
+          {/* <Card
+                             style={{ backgroundColor:'#DFFFDF', }}
+                            bodyStyle={{height:'407px',overflow:'hidden'}}> */}
+                            <div className="collapse">
+                            <Collapse
+          bordered={false}
+          defaultActiveKey={['1']}
+          expandIcon={({ isActive }) => <Icon type="caret-right" rotate={isActive ? 90 : 0} />}
+        >
+          <Panel header="文件方式验证" key="1" style={customPanelStyle}>
 
-
-
-          <Modal
-                title="文件方式验证"
-                visible={this.state.visiblefile}
-                onOk={this.fileprove}
-                onCancel={this.handleCancelfile}
-                >      
+          <Card className='avatar' title="文件方式验证" >        
       
-        <input className='ui-uploads' type="file" ref="file" id="file" name="file" multiple="multiple" onChange={() => {
+        <input className='ui-upload' type="file" ref="file" id="file" name="file" multiple="multiple" onChange={() => {
             const file = this.refs.file.files[0];
+            //const uploadfiledata=reader.readAsArrayBuffer(file)
+           // reader.onloadend = function(e) {
+              //console.log(reader);
               console.log('文件名',file.name);
               this.setState({filename:file.name});
               console.log('大小size',file.size);
@@ -319,26 +206,44 @@ class AdminManagerProve extends Component {
           }}/>
 
                 <br></br>
-              <h2 style={{marginLeft:'0px'}}>上传文件的文件名：{this.state.filename}</h2>
-               <h2 style={{marginLeft:'0px'}}>上传文件的类型：{this.state.filetype}</h2>
-               <h2 style={{marginLeft:'0px'}}>上传文件的大小：{this.state.filesize}</h2>
+              <h2 style={{marginLeft:'420px'}}>上传文件的文件名：{this.state.filename}</h2>
+               <h2 style={{marginLeft:'420px'}}>上传文件的类型：{this.state.filetype}</h2>
+               <h2 style={{marginLeft:'420px'}}>上传文件的大小：{this.state.filesize}</h2>
                <br></br>
-         
-       </Modal> 
-   
-       <Modal
-                title="加密哈希值方式验证"
-                visible={this.state.visiblehash}
-                onOk={this.handleCancelhash}
-                onCancel={this.handleCancelhash}
-                >   
+               <Button style={{marginLeft:'490px',height:'30px',width:'120px'}} type="primary" shape="round" icon="upload" onClick={() => {
+                 this.showModal1();
+            const file = this.refs.file.files[0];
+            const reader = new FileReader();
+            // reader.readAsDataURL(file);
+            reader.readAsArrayBuffer(file)
+            reader.onloadend = function(e) {
+              console.log(reader);
+              
+              saveImageOnIpfs(reader).then((resdata) => {
+                console.log('ipfsresdata',resdata);
+                console.log('ipfs存储哈希值',resdata.hash);
+                senddata = resdata.hash;
+                //transaction = hash;
+               
+                this.setState({imgHash: resdata.hash})
+                this.setState({ipfsname: resdata.path })
+                this.setState({ipfsize: resdata.size });
+              });
+            }.bind(this);
+            const ipfshash = this.state.imgHash;
+            console.log('ipfs存储哈希值imghash',typeof ipfshash);
+           //alert(ipfshash)
         
-       
-<h2 style={{marginLeft:'0px'}}> <font color='black'>加密后的哈希值查询IPFS存储</font> </h2> 
-<br></br>
+          }}>上传验证</Button>
+        </Card>  
+          </Panel>
+          <Panel header="加密后的哈希值验证" key="2" style={customPanelStyle}>
+          <Card className='avatar' title="加密后的哈希值验证 " >
+<h2 style={{marginLeft:'420px'}}> <font color='black'>加密后的哈希值查询IPFS存储</font> </h2> 
+
 
 { this.props.userInfo.localdownload === 'true' ?
-  <div style={{marginLeft:'0px'}}>
+  <div style={{marginLeft:'330px'}}>
    <Search 
                 placeholder="输入加密过后的数据哈希值"
                 onSearch={value => {
@@ -371,11 +276,10 @@ class AdminManagerProve extends Component {
         }
 
 <br></br>
-<br></br>
-<h2 style={{marginLeft:'0px'}}> <font color='black'>加密后的哈希值查询区块链存储 </font> </h2> 
-<br></br>
+<h2 style={{marginLeft:'420px'}}> <font color='black'>加密后的哈希值查询区块链存储 </font> </h2> 
+
   { this.props.userInfo.localdownload === 'true' ?
-  <div style={{marginLeft:'0px'}}>
+  <div style={{marginLeft:'330px'}}>
            <Search  
                 placeholder="输入加密过后的数据哈希值"
                 onSearch={value => {
@@ -385,7 +289,7 @@ class AdminManagerProve extends Component {
                   const deipfshash = new Blind({ encryptKey: 'PZ3oXv2v6Pq5HAPFI9NFbQ==' }).decrypt(encrypted);
                   //const deipfshash = aesDecrypt(encrypted)
                   this.props.bcFind(deipfshash)
-                 console.log('111解码数据',deipfshash)
+                 console.log('解码数据',deipfshash)
                  this.setState({visible2:false});
                  this.setState({visible3:false});
                  this.setState({visible4:false});
@@ -404,11 +308,11 @@ class AdminManagerProve extends Component {
   :<h3>没有对应权限，请联系管理员获取</h3>
 
                   }
-</Modal>  
-         
-          <Modal className='avatar' title="区块链信息验证 " >
-            <br></br>
-<div style={{marginLeft:'510px'}}>
+</Card>  
+          </Panel>
+          <Panel header="区块链信息验证" key="3" style={customPanelStyle}>
+          <Card className='avatar' title="区块链信息验证 " >
+<div style={{marginLeft:'330px'}}>
             <Search 
                 placeholder="输入区块链交易哈希值"
                 onSearch={value => {
@@ -422,8 +326,7 @@ class AdminManagerProve extends Component {
                   style={{ width: 500 }}
                 />
 </div>
-</Modal>
-
+</Card>
                 <Modal
                 title="区块链交易信息查询"
                 visible={this.state.visible1}
@@ -439,7 +342,6 @@ class AdminManagerProve extends Component {
               <h3>该交易消耗的gas：{this.props.txgasused}</h3>
          
                 </Modal>
-
                 <Modal
                 title="区块链交易信息查询"
                 visible={this.state.visible6}
@@ -452,9 +354,10 @@ class AdminManagerProve extends Component {
                <br></br>
                <br></br>
                
-      
-       
+          </Panel>
+        </Collapse>,
                             </div>
+                        {/* </Card> */}
 
                 <br></br>
                 <div >
@@ -475,7 +378,14 @@ class AdminManagerProve extends Component {
           <Button  onClick={() => {    
            const ipfshash = this.state.imgHash;
             console.log('ipfs存储哈希值imghash',ipfshash);
+           // alert(ipfshash); 
+           // alert(ipfshash.toString(''));   
             this.props.ipfsFind(senddata)
+            //const show = this.props.ipfsshow
+            // this.setState({visible2:true});
+            // this.setState({visible3:false});
+            // this.setState({visible4:false});
+            // this.setState({visible5:false});
           }
         }
           >查询IPFS是否有存储</Button>
@@ -489,29 +399,43 @@ class AdminManagerProve extends Component {
 
 <div> 
 <br></br>
-        <Button onClick={()=>{
-        this.props.bcFind(senddata);
-        // const show = this.props.bcshow;
-        this.setState({visible2:false});
-        this.setState({visible3:true});
-        this.setState({visible4:false});
-        this.setState({visible5:false});
-        }}>
-        区块链验证
-        </Button>
-        <h3></h3>
-        </div>
-        :<h3>没有对应权限，请联系管理员获取</h3>
+<Button onClick={()=>{
+this.props.bcFind(senddata);
+// const show = this.props.bcshow;
+this.setState({visible2:false});
+this.setState({visible3:true});
+this.setState({visible4:false});
+this.setState({visible5:false});
+}}>
+区块链验证
+</Button>
+<h3></h3>
+</div>
+:<h3>没有对应权限，请联系管理员获取</h3>
 
-        }
+}
 
-                </Modal>
-            
-                      </div>
+    </Modal>
 
-
+          </div>
 
 
+
+
+
+
+
+
+
+ {/* {
+     this.state.visible4 === true ?
+     <div>
+     <br></br>
+     <h3>上传文件的数据哈希值: {this.props.uploadipfs}</h3>
+     <h3>对应存储中的数据哈希值: {this.props.savedipfs}</h3>
+     </div>
+     :<div></div>
+   } */}
 
 
 

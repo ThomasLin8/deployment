@@ -36,13 +36,12 @@ class Admin extends Component {
                         this.props.userInfo.userType === 'admin' ?
                         
                         <div>
-                        {/* <Headerbar logout={this.props.logout}></Headerbar> */}
+                    
                        
                             <div className={style.container}>
                                 <div className={style.menuContainer}>
                                 <Headerbar 
-                                // logout={this.props.logout}
-                                // updatePassword={this.props.updatePassword}
+                           
                                 {...this.props}
                                 ></Headerbar>
                                     <AdminMenu history={this.props.history} />
@@ -75,8 +74,7 @@ class Admin extends Component {
 
     componentWillReceiveProps() {
         this.props.change_location_admin(window.location.pathname.replace(/\/admin/, "")||'/');
-       // this.props.getUserInfo(this.props.userInfo.username)
-        //this.props.userInfo.username
+  
     }
 
 }
@@ -95,14 +93,7 @@ Admin.defaultProps = {
 Admin.propTypes = {
     adminUrl: PropTypes.string,
     change_location_admin: PropTypes.func,
-//     utype:PropTypes.string.isRequired,
-//    // uwallet:PropTypes.number.isRequired,
-//     ublockchainupload:PropTypes.string.isRequired,
-//     uipfsupload:PropTypes.string.isRequired,
-//     ulocalupload:PropTypes.string.isRequired,
-//     ublockchaindownload:PropTypes.string.isRequired,
-//     uipfsdownload:PropTypes.string.isRequired,
-//     ulocaldownload:PropTypes.string.isRequired,
+
 };
 
 function mapStateToProps(state) {

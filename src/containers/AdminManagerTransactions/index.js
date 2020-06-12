@@ -39,30 +39,27 @@ class AdminManagerTransactions extends Component {
 
 
 
-    //搜索
+    //利用文件名进行搜索
     onSearchFileName = (filename) => {
          console.log(filename);
-        //const value = e.target.value;
         this.props.getfiletransactions(filename)
 
     };
 
+    //利用存储哈希值进行搜索
     onSearchTxhash = (txhash) => {
         console.log(txhash);
-       //const value = e.target.value;
        this.props.gettxhashtransactions(txhash)
 
    };
 
+//利用加密哈希值进行搜索
    onSearchEnipfshash = (enipfshash) => {
-    console.log(enipfshash);
-   //const value = e.target.value;
-   this.props.getenipfshashtransactions(enipfshash)
+   const ipfshash = new Blind({ encryptKey: 'PZ3oXv2v6Pq5HAPFI9NFbQ==' }).decrypt(enipfshash);
+    console.log(ipfshash);
+   this.props.getenipfshashtransactions(ipfshash)
 
 };
-
-
-   
     render() {
         const columns = [
             {
@@ -70,11 +67,6 @@ class AdminManagerTransactions extends Component {
                 dataIndex: '_id',
                 key: 'ID',
             },
-        //     {
-        //     title: '用户',
-        //     dataIndex: 'username',
-        //     key: 'name'
-        // },  
         {
             title: '文件名',
             dataIndex: 'filename',
@@ -96,18 +88,16 @@ class AdminManagerTransactions extends Component {
         },
         {
             title:'操作',
-            // width: 100,
-            // fixed: 'left',
             key:'action',
             render:(text) => {
                 return(
                 <div>
                     <span>
+                        {/* //先将加密哈希值解密,然后利用ipfs下载对应的文件 */}
                     <a href="javascript:;" onClick={() => {
                         const deipfshash = new Blind({ encryptKey: 'PZ3oXv2v6Pq5HAPFI9NFbQ==' }).decrypt(text.enipfshash);
                         const fileUrl = "http://localhost:8080/ipfs/" + deipfshash;
                         const a = document.createElement('a');                     
-                        //var url = window.URL.createObjectURL(blob);
                         var filename = 'download';
                         a.href = fileUrl;
                         a.download = filename;
@@ -118,7 +108,7 @@ class AdminManagerTransactions extends Component {
                         }}>Download</a> 
                   
                    
-                   
+                   {/* popconfirm弹出确认狂 */}
                     <span className="ant-divider" />
                     <Popconfirm title="Sure to delete?" onConfirm={() => {
                         console.log('发送ID',text.ID)
@@ -134,12 +124,11 @@ class AdminManagerTransactions extends Component {
         }
         ];
         return (
-            // <div className="avatar">
            
 
   <div>
 
- 
+ // 表格的形式和内容
 <h1 style={{textAlign:'center',color:'gray'}}>存储记录</h1>
               <br></br>
 

@@ -6,20 +6,16 @@ import {  Input, Modal, Form, Select } from  'antd';
 const FormItem = Form.Item;
 const Option = Select.Option;
 
-
+// 建立表
 export const CollectionCreateForm = Form.create({ name: 'form_in_modal' })(
-    // eslint-disable-next-line
     class Child extends React.Component {
          defaultProps = {
             defaultvalue: [ ]
          }
-        //  handleUpdate  (value)  {
-        //      this.props.handleUpdate(value)
-        //  }
 
+         // 将表格的修改提交
         handleSubmit = (e) => {
             e.preventDefault();
-           
             this.props.form.validateFields((err, values) => {
               if (!err) {
                 let userdata = {};
@@ -51,6 +47,7 @@ export const CollectionCreateForm = Form.create({ name: 'form_in_modal' })(
         
         return (
            
+           // Formitem 是表格展示的元素
           <Modal
             visible={visible}
             title="用户编辑"
@@ -61,9 +58,7 @@ export const CollectionCreateForm = Form.create({ name: 'form_in_modal' })(
             
           >
             <Form onSubmit={this.handleSubmit} >
-            
- 
-        
+
         <FormItem
           label="密码"
           labelCol={{ span: 4 }}
@@ -220,13 +215,6 @@ export const CollectionCreateForm = Form.create({ name: 'form_in_modal' })(
         <FormItem
           wrapperCol={{ span: 8, offset: 4 }}
         >
-        
-          {/* <Button type="primary" htmlType="submit">
-            Submit
-          </Button> */}
-          {/* <Button  onClick={this.handleChange}>
-            Read
-          </Button> */}
           
         </FormItem>
         

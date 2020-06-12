@@ -1,6 +1,4 @@
 import React,  { Component,PropTypes } from 'react';
-
-// import './Profile.less'
 import { Row, Col, Card, Icon,Input } from 'antd';
 import { actions  } from '../../reducers/adminManagerUser';
 import PureRenderMixin from 'react-addons-pure-render-mixin'
@@ -22,9 +20,8 @@ const cardstyle = {
     border: '1px solid #e8e8e8',
   };
 const salescard= [
-    {"name":2008,"卫衣":214,"T恤":354,"衬衫":416},{"name":2009,"卫衣":395,"T恤":192,"衬衫":390},{"name":2010,"卫衣":260,"T恤":269,"衬衫":404},{"name":2011,"卫衣":323,"T恤":297,"衬衫":449},{"name":2012,"卫衣":215,"T恤":220,"衬衫":491},{"name":2013,"卫衣":365,"T恤":341,"衬衫":422},{"name":2014,"卫衣":218,"T恤":187,"衬衫":349},{"name":2015,"卫衣":248,"T恤":217,"衬衫":431}
+    {"name":1.40,"百度云单节点":0.13,"百度云双节点":0.12,"局域网单节点":0.16},{"name":46,"百度云单节点":6.29,"百度云双节点":7.05,"局域网单节点":0.638},{"name":75,"百度云单节点":11.39,"百度云双节点":8.92,"局域网单节点":1.06},{"name":550,"百度云单节点":60,"百度云双节点":72,"局域网单节点":7.16},{"name":720,"百度云单节点":78,"百度云双节点":84,"局域网单节点":11.82},
 ];
-
 class AdminIndex extends Component {
     constructor(props) {
         super(props);
@@ -96,7 +93,7 @@ class AdminIndex extends Component {
                       <p className='number'>
                         <CountUp
                           start={0}
-                          end={2372}
+                          end={12}
                           duration={2.75}
                           useEasing
                           useGrouping
@@ -118,7 +115,7 @@ class AdminIndex extends Component {
                       <p className='number'>
                         <CountUp
                           start={0}
-                          end={666  }
+                          end={11 }
                           duration={2.75}
                           useEasing
                           useGrouping
@@ -141,30 +138,15 @@ class AdminIndex extends Component {
           padding: '24px 36px 24px 0',
         }}>
           <div className='sales'>
-            <div className='title'>统计</div>
+            <div className='title'>节点性能</div>
             <ResponsiveContainer minHeight={360}>
               <LineChart data={salescard}>
-                {/* <Legend verticalAlign="top"
-                  content={prop => {
-                    const { payload } = prop
-                    return (<ul className={classnames({ ['legend']: true, clearfix: true })}>
-                      {payload.map((item, key) => <li key={key}><span className={'radiusdot'} style={{ background: item.color }} />{item.value}</li>)}
-                    </ul>)
-                  }}
-                /> */}
                 <XAxis dataKey="name" axisLine={{ stroke: '#e5e5e5', strokeWidth: 1 }} tickLine={false} />
                 <YAxis axisLine={false} tickLine={false} />
                 <CartesianGrid vertical={false} stroke={'#e5e5e5'} strokeDasharray="3 3" />
-                {/* <Tooltip
-                  wrapperStyle={{ border: 'none', boxShadow: '4px 4px 40px rgba(0, 0, 0, 0.05)' }}
-                  content={content => {
-                    const list = content.payload.map((item, key) => <li key={key} className='tipitem'><span className='radiusdot' style={{ background: item.color }} />{`${item.name}:${item.value}`}</li>)
-                    return <div className='tooltip'><p className='tiptitle'>{content.label}</p><ul>{list}</ul></div>
-                  }}
-                /> */}
-                <Line type="monotone" dataKey="衬衫" stroke='#faaf76' strokeWidth={3} dot={{ fill: '#d897eb' }} activeDot={{ r: 5, strokeWidth: 0 }} />
-                <Line type="monotone" dataKey="T恤" stroke='#76cdd3' strokeWidth={3} dot={{ fill: '#f69899' }} activeDot={{ r: 5, strokeWidth: 0 }} />
-                <Line type="monotone" dataKey="卫衣" stroke='#f79992' strokeWidth={3} dot={{ fill: '#64ea91' }} activeDot={{ r: 5, strokeWidth: 0 }} />
+                <Line type="monotone" dataKey="局域网单节点" stroke='#faaf76' strokeWidth={3} dot={{ fill: '#d897eb' }} activeDot={{ r: 5, strokeWidth: 0 }} />
+                <Line type="monotone" dataKey="百度云双节点" stroke='#76cdd3' strokeWidth={3} dot={{ fill: '#f69899' }} activeDot={{ r: 5, strokeWidth: 0 }} />
+                <Line type="monotone" dataKey="百度云单节点" stroke='#f79992' strokeWidth={3} dot={{ fill: '#64ea91' }} activeDot={{ r: 5, strokeWidth: 0 }} />
               </LineChart>
             </ResponsiveContainer>
           </div>

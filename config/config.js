@@ -2,19 +2,18 @@ module.exports = {
     host:process.env.HOST || '127.0.0.1',
     port:process.env.PORT || (process.env.NODE_ENV === 'production' ? 8081 : 3001),
     apiHost:process.env.APIHOST || '127.0.0.1',
-    apiPort:process.env.APIPORT || '3030',
+    apiPort:process.env.APIPORT || '3032',
     dbHost:'localhost',
     dbPort:'27017',
     app:{
-        //title:'Sam\'s Blog',
-        title: 'react app',
-        description:'A react app',
+        title: '区块链存证',
+        description:'A blockchain dapp',
         head:{
-            titleTemplate:'blog',
+            titleTemplate:'dapp',
             meta:[
                 {
                     name:'description',
-                    content:'react app'
+                    content:'react dapp'
                 },
                 {
                     charset:'utf-8'

@@ -1,19 +1,15 @@
 /**
- * 用户的表结构
+ * 存储记录的表结构
  */
 import mongoose from 'mongoose'
-//var myDate = new Date(); 
 module.exports = new mongoose.Schema({
-    username:String,
-    filename:String,
-    transaction:String,
-    ipfshash:String,
-    enipfshash:String,
-    date : String
-    // date: { type: Date, default: Date.now },
-   //date: { type: Date, default: new Date().toLocaleTimeString() },
+    username:String,//用户名
+    filename:String,//文件名
+    transaction:String,//存储地址
+    ipfshash:String,//IPFS哈希值
+    enipfshash:String,//加密IPFS哈希值
+    date : String//时间
 
 }
 
 );
-//module.exports = mongoose.model('Member', MemberSchema);

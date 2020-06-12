@@ -27,6 +27,7 @@ router.post('/login', (req,res) => {
             let data = {};
             data.username = userInfo.username;
             data.userType = userInfo.type;
+            data.password = userInfo.password;
             data.userId = userInfo._id;
             data.wallet = userInfo.wallet;
             data.blockchainupload = userInfo.blockchainupload;

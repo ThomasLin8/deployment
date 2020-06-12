@@ -16,7 +16,7 @@ const InputDataDecoder = require('input-data-decoder-ethereum');
 //const privateKey = Buffer.from('d80bd914a062b4e31e16cbb74c827fee0dcf76942ffb1df9416565b0a34ef0f9', 'hex')
 const privateKey = Buffer.from('061676AE52F57B2A90F859889C76FEFCF68EE4483A0E46D0E3D5BB4F4E620D13', 'hex')
 //配置web3的httpprovider，采用infura
-const web3 = new Web3(new Web3.providers.HttpProvider("http://47.94.130.17:8546"));
+const web3 = new Web3(new Web3.providers.HttpProvider("http://127.0.0.1:8546"));
 
 const Blind = require('blind');
 const tokenAbi = [
@@ -63,6 +63,7 @@ const mycontract = new web3.eth.Contract(tokenAbi,contractAddr,{
 } );
 //const urlencodedParser = bodyParser.urlencoded({ extended: false })
 
+//添加交易
      router.post('/addTransaction', function (req, res) {
         let {transaction,ipfshash,date,filename} = req.body;
         // let {ipfshash,date} = req.body;
@@ -127,7 +128,7 @@ const mycontract = new web3.eth.Contract(tokenAbi,contractAddr,{
     });
 
 
-
+//更新钱包
     router.post('/updateWallet',function (req, res) {
         let {cost,serializedTx} = req.body;
         console.log("结构体",req.body);
@@ -204,7 +205,7 @@ else{
     });
 
 
-    
+//获得所有的交易信息 
     router.get('/getAllTransactions', (req,res) => {
         let user = req.session.userInfo.username;
         let skip = (req.query.pageNum - 1) < 0 ? 0 : (req.query.pageNum - 1) * 10;
@@ -226,7 +227,7 @@ else{
       });
 });
 
-
+//通过文件名查找交易
 router.get('/getfilenameTransactions', (req,res) => {
     
     const filename = req.query.filename;
@@ -251,9 +252,12 @@ router.get('/getfilenameTransactions', (req,res) => {
   });
 });
 
+//通过IPFS哈希值查找交易
 router.get('/getenipfshashTransactions', (req,res) => {
-    const enipfshash = req.query.enipfshash;
-    console.log(enipfshash)
+    let ipfshash = req.query.enipfshash;  
+    //enipfshash = String(enipfshash)
+   // const ipfshash = new Blind({ encryptKey: 'PZ3oXv2v6Pq5HAPFI9NFbQ==' }).decrypt(enipfshash);
+    console.log("哈希值",ipfshash)
    // let user = req.session.userInfo.username;
     //let skip = (req.query.pageNum - 1) < 0 ? 0 : (req.query.pageNum - 1) * 10;
     let responseData = {
@@ -263,7 +267,7 @@ router.get('/getenipfshashTransactions', (req,res) => {
     Ipfstransaction.count()
     .then(count => {
         responseData.total = count;
-       Ipfstransaction.find({enipfshash: enipfshash},'_id username filename transaction enipfshash date')
+       Ipfstransaction.find({ipfshash:ipfshash},'_id username filename transaction enipfshash date')
             .then((result) => {
                   responseData.list = result;
                   responseClient(res,200,0,'',responseData)
@@ -274,6 +278,7 @@ router.get('/getenipfshashTransactions', (req,res) => {
   });
 });
 
+//通过交易哈希值来查找交易
 router.get('/gettxhashTransactions', (req,res) => {
     const txhash = req.query.txhash;
     console.log(txhash)
@@ -297,7 +302,7 @@ router.get('/gettxhashTransactions', (req,res) => {
   });
 });
 
-
+//验证IPFS中文件完整性
 router.get('/IPFSfind', function (req, res) {
     let ipfshash = req.query.ipfshash;
     //console.log("发送的body数据",req.body);   
@@ -345,6 +350,7 @@ router.get('/IPFSfind', function (req, res) {
     
 });
 
+//验证区块链中文件完整性
 router.get('/Bcfind', function (req, res) {
     let ipfshash = req.query.ipfshash;
     //console.log("发送的body数据",req.body);   
@@ -415,7 +421,26 @@ router.get('/Bcfind', function (req, res) {
 
                     })
                  
-               
+                 //console.log('交易信息获得',)
+                 //responseClient(res, 200, 0, '区块链已存储了该文件的Hash,验证为真');
+                //   console.log('查询结果',result.transaction)
+                //   txhash = result.transaction
+                // web3.eth.getTransaction(result.transaction).then (
+                //     (err,rdata) => {
+                //         if(err)
+                //         {responseClient(res, 200, 0, '查询出错，请再试一次');}
+                //         else{
+                //         console.log('tx hash查找到的交易:',rdata);
+                //         const trdata = rdata.input;
+                //           console.log('解码前数据:', trdata);
+                //           const dedata = decoder.decodeData(trdata);
+                //         if(dedata === ipfshash)
+                //         {responseClient(res, 200, 0, '区块链已存储了该文件的Hash,验证为真');}
+                //         else
+                //         {responseClient(res, 200, 1, '区块链未存储了该文件的Hash,验证为假');}
+                //     }
+                // }
+                //  )
                
                 
              } else {
@@ -438,6 +463,7 @@ router.get('/Bcfind', function (req, res) {
     
 });
 
+//利用交易哈希值查找交易
 router.get('/txfind', function (req, res) {
     let txhash = req.query.txhash;
     //console.log("发送的body数据",req.body);   

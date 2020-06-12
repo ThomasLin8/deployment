@@ -2,8 +2,7 @@ import React, { Component, PropTypes } from 'react';
 import style from './style.css';
 import Header from '../../components/Header';
 import Footer from '../../components/Footer';
-//import Menus from '../../components/Menus';
-import ArticleList from '../../components/ArticleList'
+
 import PureRenderMixin from 'react-addons-pure-render-mixin'
 import { Pagination } from 'antd';
 import { connect } from 'react-redux'
@@ -28,34 +27,11 @@ class Home extends Component {
     }
 
     render() {
-        //const { tags } = this.props;
         localStorage.setItem('userInfo', JSON.stringify(this.props.userInfo));
         return (
-        //   tags.length > 1 && this.props.match.params.tag && (tags.indexOf(this.props.match.params.tag) === -1 || this.props.location.pathname.lastIndexOf('\/') > 0)
-        //       ?
-        //       <Redirect to='/404'/>
-        //       :
+    
               <div className={style.container}>
                   <Header handleLogin={this.handleLogin}/>
-                  {/* <div className={style.nav}>
-                      <Menus getArticleList={(tag)=>this.props.get_article_list(tag,1)} categories={this.props.tags} history={this.props.history}/>
-                  </div> */}
-                  {/* <div className={style.main}>
-                      <ArticleList
-                          history={this.props.history}
-                          data={this.props.articleList}
-                          getArticleDetail={this.props.get_article_detail}
-                      />
-                      <div className={style.paginationContainer}>
-                          <Pagination
-                              defaultPageSize={10}
-                              onChange={(pageNum) => {
-                                  this.props.get_article_list(this.props.match.params.tag || '', pageNum);
-                              }}
-                              current={this.props.pageNum}
-                              total={this.props.total}/>
-                      </div>
-                  </div> */}
                   <Footer />
                   <Modal visible={this.state.showLogin} footer={null} onCancel={this.onCancel}>
                   {this.props.userInfo.userId ?

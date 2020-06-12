@@ -1,10 +1,6 @@
 import React from 'react';
 import { Row, Col, Card, message } from 'antd';
 import ReactEcharts from 'echarts-for-react';
-// import * as airportConfig from './airportConfig';
-
-// require('echarts/map/js/china.js');
-
 class ChartsCard extends React.Component {
 
   onChartClick = () => {
@@ -16,13 +12,13 @@ class ChartsCard extends React.Component {
     const chartscard = {
       sdoption: {
         title: {
-          text: '堆叠图',
+          text: '预留',
         },
         tooltip: {
           trigger: 'axis'
         },
         legend: {
-          data: ['邮件营销', '联盟广告', '视频广告']
+          data: ['预留1', '预留2', '预留3']
         },
         toolbox: {
           feature: {
@@ -38,7 +34,7 @@ class ChartsCard extends React.Component {
           {
             type: 'category',
             boundaryGap: false,
-            data: ['周一', '周二', '周三', '周四', '周五', '周六', '周日']
+            data: ['预留', '预留二', '预留三', '预留四', '预留五', '预留六', '预留七']
           }
         ],
         yAxis: [
@@ -48,21 +44,21 @@ class ChartsCard extends React.Component {
         ],
         series: [
           {
-            name: '邮件营销',
+            name: '预留1',
             type: 'line',
             stack: '总量',
             areaStyle: {normal: {}},
             data: [120, 132, 101, 134, 90, 230, 210]
           },
           {
-            name: '联盟广告',
+            name: '预留2',
             type: 'line',
             stack: '总量',
             areaStyle: {normal: {}},
             data: [220, 182, 191, 234, 290, 330, 310]
           },
           {
-            name: '视频广告',
+            name: '预留3',
             type: 'line',
             stack: '总量',
             areaStyle: {normal: {}},
@@ -72,7 +68,7 @@ class ChartsCard extends React.Component {
       },
       eeoption: {
         title: {
-          text: ' 用户访问来源',
+          text: ' 节点构成',
           x: 'center'
         },
         tooltip: {
@@ -82,7 +78,7 @@ class ChartsCard extends React.Component {
         legend: {
           orient: 'vertical',
           left: 'left',
-          data: ['直接访问', '邮件营销', '联盟广告', '视频广告', '搜索引擎']
+          data: ['阿里云服务器', '本地局域网服务器', '百度云服务器']
         },
         series: [
           {
@@ -91,11 +87,10 @@ class ChartsCard extends React.Component {
             radius: '55%',
             center: ['50%', '60%'],
             data: [
-                        {value: 335, name: '直接访问'},
-                        {value: 310, name: '邮件营销'},
-                        {value: 234, name: '联盟广告'},
-                        {value: 135, name: '视频广告'},
-                        {value: 1548, name: '搜索引擎'}
+                        {value: 2, name: '阿里云服务器'},
+                        {value: 3, name: '本地局域网服务器'},
+                        {value: 2, name: '百度云服务器'},
+                        
             ],
             itemStyle: {
               emphasis: {
@@ -141,17 +136,6 @@ class ChartsCard extends React.Component {
             </Card>
           </Col>
         </Row>
-        {/* <Row style={{ marginTop: 20 }}>
-            <Col>
-            <Card
-              bordered={false}
-              hoverable>
-              <ReactEcharts
-                option={airportConfig.getOption}
-                style={{height: '600px', width: '100%'}} />
-            </Card>
-            </Col>
-        </Row> */}
         </div>
     );
   }
