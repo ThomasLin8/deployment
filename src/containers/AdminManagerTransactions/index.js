@@ -114,6 +114,9 @@ class AdminManagerTransactions extends Component {
                         console.log('发送ID',text.ID)
                         console.log('text数据',text)
                         this.props.DeleteTransaction(text._id)
+                        setTimeout(() => {
+                            location.reload();
+                        }, 400);
                     }}>
                     <a href="javascript:;">Delete</a>
                     </Popconfirm>

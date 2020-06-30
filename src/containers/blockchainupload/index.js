@@ -7,6 +7,7 @@ import  './index.less';
 import { actions } from '../../reducers/AdminManagerTransactions'
 import dateFormat from 'dateformat'
 import {Blockchainuploadform} from './Blockchainuploadform';
+import { setTimeout } from 'timers';
 const {add_transaction,update_wallet,txhash_find} = actions;
 const FormItem = Form.Item;
 //api插件的引用
@@ -18,7 +19,7 @@ const Web3 = require('web3');
 const InputDataDecoder = require('input-data-decoder-ethereum');
 
 //设置IPFS参数
-const ipfs = ipfsAPI('/ip4/39.99.215.93/tcp/5001');
+const ipfs = ipfsAPI('/ip4/127.0.0.1/tcp/5001');
 //使用的合约的abi信息
 const tokenAbi =[
 	{
@@ -55,8 +56,8 @@ const tokenAbi =[
 const privateKey = Buffer.from('061676AE52F57B2A90F859889C76FEFCF68EE4483A0E46D0E3D5BB4F4E620D13', 'hex')
 
 //配置web3的httpprovider
-const web3 = new Web3(new Web3.providers.HttpProvider("http://39.99.215.93:8546"));
-
+const web3 = new Web3(new Web3.providers.HttpProvider("http://127.0.0.1:8546"));
+//const web3 = new Web3(new Web3.providers.HttpProvider("http://39.99.215.93:8546"));
 let senddata = []; //发送数据
 let nonce; //nonce
 let ttxhash;
@@ -181,11 +182,21 @@ class uploadfileblockchain extends Component {
           }
 
     }
+
+    // componentWillReceiveProps(nextProps, nextContext) {
+    //   this.setState({
+    //     caseDetail: nextProps.caseDetail
+    //   });
+    //   setTimeout(this.changeHeight, 0);
+    // }
+
+
 // showmodal 对应modal的打开,handleok表示下一步,handlecancel取消关闭model
     showModal2 = () => {
       this.setState({
         visible2: true,
       });
+      this.forceUpdate();
     }
     handleOk2 = (e) => {
       console.log(e);
@@ -193,16 +204,16 @@ class uploadfileblockchain extends Component {
         visible2: false,
       });
       let data={};
-      data.transaction = ttxhash;
+      data.transaction = this.props.keyhash;
       data.filename = formdata.filename;
       data.ipfshash = this.state.imgHash;
       data.date =  dateFormat(new Date(), 'yyyy-mm-dd HH:MM:ss');
       
       this.props.addTransaction(data);
 
-     
+      
       setTimeout(() => {
-     
+        location.reload();
         this.setState({current:0})
         
        }, 4000);
@@ -228,10 +239,11 @@ class uploadfileblockchain extends Component {
       });
     }
     handleCancel = (e) => {
-      console.log(e);
+
       this.setState({
         visible1: false,
       });
+      location.reload();
     }
 
 
@@ -266,10 +278,14 @@ class uploadfileblockchain extends Component {
       });
     }
     handleCancelf = (e) => {
-      console.log(e);
+      
       this.setState({
         visiblef: false,
       });
+
+      setTimeout(() => {
+        location.reload();
+      },600);
     }
 
 
@@ -425,24 +441,29 @@ class uploadfileblockchain extends Component {
           isWriteSuccess = 'true'
         
           this.props.updateWallet(transaction);
+          
 
       setTimeout(() => {
-        walletmoney = this.props.balance
-        ttxhash = this.props.keyhash
-        this.setState({
-          visible1: false,
-        });
-        
-        this.uploadfinish();
-        if(this.props.userInfo.blockchainupload === 'true')
-        {this.showModal2();}
-        const current = this.state.current + 1;
-        this.setState({ current });
+        // walletmoney = this.props.balance
+        // ttxhash = this.props.keyhash
+        this.forceUpdate();
+        setTimeout(() => {
+          this.setState({
+            visible1: false,
+          });
+          
+          this.uploadfinish();
+          if(this.props.userInfo.blockchainupload === 'true')
+          {this.showModal2();}
+          const current = this.state.current + 1;
+          this.setState({ current });
+        },1000);
+
       }, 600);
      
       
       console.log('文件的hash已经写入到区块链！');
-      this.setState({txhash:ttxhash});
+      this.setState({txhash:this.props.keyhash});
       this.setState({cost:cost });
       this.setState({msgshow: true});
 
@@ -501,11 +522,10 @@ class uploadfileblockchain extends Component {
                             const Bdate = dateFormat(new Date(), 'yyyy-mm-dd HH:MM:ss');
                             console.log("1时间",Bdate)
                                 const file = this.refs.file.files[0];
-                        
-                                this.setState({filename:file.name});
-                                this.setState({filetype:file.type});
-                                this.setState({filesize:file.size});
-                        
+                                this.state.filename = file.name;
+                                this.state.filetype = file.type;
+                                this.state.filesize = file.size;
+                                this.forceUpdate();
                     
                             }}/>
                                 <br></br>
@@ -542,9 +562,9 @@ class uploadfileblockchain extends Component {
 
          <h3>本次花销:{this.state.cost}</h3>
          <br></br>
-         <h3>用户余额:{walletmoney}</h3>
+         <h3>用户余额:{this.props.balance}</h3>
          <br></br>
-         <h3><font color='red'>该交易的Hash：{ttxhash}</font></h3>
+         <h3><font color='red'>该交易的Hash：{this.props.keyhash}</font></h3>
          <br></br>
        
         </Modal>
@@ -555,7 +575,7 @@ class uploadfileblockchain extends Component {
           onOk={this.handleOk3}
           onCancel={this.handleCancel3}
         >
-         <h3><font color='red'>该交易的Hash：{ttxhash}</font></h3>
+         <h3><font color='red'>该交易的Hash：{this.props.keyhash}</font></h3>
                     <br></br>
                     <h3>从区块链读取的存储内容：{this.props.txipfshash}</h3>
                     <br></br>

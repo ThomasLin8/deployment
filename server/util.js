@@ -27,6 +27,7 @@ module.exports = {
         responseData.code = code;
         responseData.message = message;
         responseData.data = data;
-        res.status(httpCode).json(responseData)
+        res.status(httpCode).json(responseData);
+       
     }
 }

@@ -94,7 +94,10 @@ class AdminManagerUser extends Component {
         this.formRef = formRef;
       }
     handleDelete  (username)  {
-        this.props.deleteUser(username)
+        this.props.deleteUser(username);
+        setTimeout(() => {
+          location.reload();
+      }, 400);
     }
     // handleUpdate  (value)  {
     //     this.props.updateUser(value)
