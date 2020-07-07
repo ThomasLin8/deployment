@@ -72,6 +72,7 @@ let formdata
 let isWriteSuccess
 
 
+
 //合约地址
 //const contractAddr = '0xe0A2318f72fCe73AE9Cc207014fF361Cf3E05680';
 const contractAddr = '0xe0A2318f72fCe73AE9Cc207014fF361Cf3E05680';
@@ -153,9 +154,6 @@ class uploadfileblockchain extends Component {
             gasused: null,
             blockhash: null,
             readmsg: false,
-            filename: null,
-            filesize: null,
-            filetype: null,
             ipfsname: null,
             ipfsize: null,
             visible1: false,
@@ -508,9 +506,10 @@ class uploadfileblockchain extends Component {
                             const Bdate = dateFormat(new Date(), 'yyyy-mm-dd HH:MM:ss');
                             console.log("1时间",Bdate)
                                 const file = this.refs.file.files[0];
-                                this.state.filename = file.name;
-                                this.state.filetype = file.type;
-                                this.state.filesize = file.size;                   
+                                this.setState({filename:file.name});
+                                this.setState({filetype:file.type});
+                                this.setState({filesize:file.size});
+                                            
                             }}/>
                                 <br></br>
                     <br></br>
