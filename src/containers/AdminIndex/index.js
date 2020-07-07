@@ -1,24 +1,19 @@
 import React,  { Component,PropTypes } from 'react';
-import { Row, Col, Card, Icon,Input } from 'antd';
+import { Row, Col, Card, Icon} from 'antd';
 import { actions  } from '../../reducers/adminManagerUser';
 import PureRenderMixin from 'react-addons-pure-render-mixin'
 import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
 import CountUp from 'react-countup';
-import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
+import { LineChart, Line, XAxis, YAxis, CartesianGrid, ResponsiveContainer } from 'recharts';
 import ChartsCard from './Card/ChartsCard';
 import './Card.less';
 
 
-const profileImg = require('../../assets/img/profile.jpg');
+
 const { get_logout } = actions;
 
-const cardstyle = {
-    width: '400px',
-    margin: '30px',
-    boxShadow: '0 4px 8px 0 rgba(0, 0, 0, 0.2)',
-    border: '1px solid #e8e8e8',
-  };
+
 const salescard= [
     {"name":1.40,"百度云单节点":0.13,"百度云双节点":0.12,"局域网单节点":0.16},{"name":46,"百度云单节点":6.29,"百度云双节点":7.05,"局域网单节点":0.638},{"name":75,"百度云单节点":11.39,"百度云双节点":8.92,"局域网单节点":1.06},{"name":550,"百度云单节点":60,"百度云双节点":72,"局域网单节点":7.16},{"name":720,"百度云单节点":78,"百度云双节点":84,"局域网单节点":11.82},
 ];
@@ -28,9 +23,6 @@ class AdminIndex extends Component {
         this.shouldComponentUpdate = PureRenderMixin.shouldComponentUpdate.bind(this);
     }
     render() {
-
-        
-
         return  (
             
             <div  className="avatar">
@@ -41,7 +33,7 @@ class AdminIndex extends Component {
                   <Card
                     className='countCard'
                     bordered={true}
-                    hoverable>
+                  >
                         
                     <Icon className='iconWarp' style={{ color: 'blue' }} type={'sync'} />
                     <div className='content'>
@@ -64,7 +56,7 @@ class AdminIndex extends Component {
                   <Card
                     className='countCard'
                     bordered={true}
-                    hoverable>
+                  >
                     <Icon className='iconWarp' style={{ color: 'blue' }} type={'desktop'} />
                     <div className='content'>
                       <p className='title'>IPFS节点</p>
@@ -86,7 +78,7 @@ class AdminIndex extends Component {
                   <Card
                     className='countCard'
                     bordered={true}
-                    hoverable>
+                  >
                     <Icon className='iconWarp' style={{ color: 'blue' }} type={'team'} />
                     <div className='content'>
                       <p className='title'>用户数</p>
@@ -108,7 +100,7 @@ class AdminIndex extends Component {
                   <Card
                     className='countCard'
                     bordered={true}
-                    hoverable>
+                  >
                     <Icon className='iconWarp' style={{ color: 'blue' }} type={'check'} />
                     <div className='content'>
                       <p className='title'>赞赏</p>

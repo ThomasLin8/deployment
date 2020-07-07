@@ -188,7 +188,7 @@ class AdminManagerUser extends Component {
 },
     {
         title:'操作',
-        // width: 100,
+         width: 100,
         // fixed: 'left',
         key:'action',
         render:(text,record,index) => {

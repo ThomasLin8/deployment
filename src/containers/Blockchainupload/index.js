@@ -19,7 +19,8 @@ const Web3 = require('web3');
 const InputDataDecoder = require('input-data-decoder-ethereum');
 
 //设置IPFS参数
-const ipfs = ipfsAPI('/ip4/127.0.0.1/tcp/5001');
+//const ipfs = ipfsAPI('/ip4/127.0.0.1/tcp/5001');
+const ipfs = ipfsAPI('/ip4/39.99.215.93/tcp/5001');
 //使用的合约的abi信息
 const tokenAbi =[
 	{
@@ -56,22 +57,22 @@ const tokenAbi =[
 const privateKey = Buffer.from('061676AE52F57B2A90F859889C76FEFCF68EE4483A0E46D0E3D5BB4F4E620D13', 'hex')
 
 //配置web3的httpprovider
-const web3 = new Web3(new Web3.providers.HttpProvider("http://127.0.0.1:8546"));
-//const web3 = new Web3(new Web3.providers.HttpProvider("http://39.99.215.93:8546"));
+//const web3 = new Web3(new Web3.providers.HttpProvider("http://127.0.0.1:8546"));
+const web3 = new Web3(new Web3.providers.HttpProvider("http://39.99.215.93:8546"));
 let senddata = []; //发送数据
 let nonce; //nonce
-let ttxhash;
 let transaction =[];
 let gasused;
 let cost;
 let keysize;
-let walletmoney
 let keyhash
 let formdata
-let isWriteSuccess
+
 
 //合约地址
+//const contractAddr = '0xe0A2318f72fCe73AE9Cc207014fF361Cf3E05680';
 const contractAddr = '0xe0A2318f72fCe73AE9Cc207014fF361Cf3E05680';
+const contractAddr =
 //设置使用的账户
 web3.eth.defaultAccount = '0x1aB1DC744b964f5c5023d92666D7f738Eb04B203';
 
@@ -132,17 +133,6 @@ const steps = [
   },
 ];
 
-//格式布局
-const formItemLayout = {
-  labelCol: {
-    xs: { span: 24 },
-    sm: { span: 5 },
-  },
-  wrapperCol: {
-    xs: { span: 24 },
-    sm: { span: 12 },
-  },
-};
 
 
 
@@ -183,12 +173,6 @@ class uploadfileblockchain extends Component {
 
     }
 
-    // componentWillReceiveProps(nextProps, nextContext) {
-    //   this.setState({
-    //     caseDetail: nextProps.caseDetail
-    //   });
-    //   setTimeout(this.changeHeight, 0);
-    // }
 
 
 // showmodal 对应modal的打开,handleok表示下一步,handlecancel取消关闭model
@@ -524,9 +508,7 @@ class uploadfileblockchain extends Component {
                                 const file = this.refs.file.files[0];
                                 this.state.filename = file.name;
                                 this.state.filetype = file.type;
-                                this.state.filesize = file.size;
-                                this.forceUpdate();
-                    
+                                this.state.filesize = file.size;                   
                             }}/>
                                 <br></br>
                     <br></br>

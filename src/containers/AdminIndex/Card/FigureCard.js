@@ -37,7 +37,7 @@ class FigureCard extends React.Component {
                         </div>
                       </div>}
                     bordered={false}
-                    hoverable>
+                    >
                     <div className={'card-footer'}>
                       <Icon type={v.subIcon} />
                       {' '}{v.sub}

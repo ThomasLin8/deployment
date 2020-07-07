@@ -16,8 +16,8 @@ const Panel = Collapse.Panel;
 
 //IPFS插件引用
 const ipfsAPI = require('ipfs-api');
-const ipfs = ipfsAPI('/ip4/127.0.0.1/tcp/5001');
-
+//const ipfs = ipfsAPI('/ip4/127.0.0.1/tcp/5001');
+const ipfs = ipfsAPI('/ip4/39.99.215.93/tcp/5001');
 //web3 api插件的引用
 const Web3 = require('web3');
 

@@ -67,12 +67,7 @@ export const actions = {
             txhash:txhash
         }
     },
-    // delete_tag:function (name) {
-    //     return{
-    //         type:actionTypes.DELETE_TAG,
-    //         name
-    //     }
-    // },
+
     update_wallet:function (transactiondata) {
         return{
             type:actionTypes.UPDATE_WALLET,

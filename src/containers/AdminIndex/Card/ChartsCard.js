@@ -119,7 +119,7 @@ class ChartsCard extends React.Component {
           <Col xs={24} sm={24} md={12} lg={12} xl={12}>
             <Card
               bordered={false}
-              hoverable>
+            >
               <ReactEcharts
                 option={chartscard.sdoption}
                 style={reStyle} />
@@ -128,7 +128,7 @@ class ChartsCard extends React.Component {
           <Col xs={24} sm={24} md={12} lg={12} xl={12}>
             <Card
               bordered={false}
-              hoverable>
+            >
               <ReactEcharts
                 option={chartscard.eeoption}
                 onEvents={onEvents}

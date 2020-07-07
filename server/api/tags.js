@@ -16,8 +16,8 @@ const InputDataDecoder = require('input-data-decoder-ethereum');
 //const privateKey = Buffer.from('d80bd914a062b4e31e16cbb74c827fee0dcf76942ffb1df9416565b0a34ef0f9', 'hex')
 const privateKey = Buffer.from('061676AE52F57B2A90F859889C76FEFCF68EE4483A0E46D0E3D5BB4F4E620D13', 'hex')
 //配置web3的httpprovider，采用infura
-const web3 = new Web3(new Web3.providers.HttpProvider("http://127.0.0.1:8546"));
-//const web3 = new Web3(new Web3.providers.HttpProvider("http://39.99.215.93:8546"));
+//const web3 = new Web3(new Web3.providers.HttpProvider("http://127.0.0.1:8546"));
+const web3 = new Web3(new Web3.providers.HttpProvider("http://39.99.215.93:8546"));
 
 const Blind = require('blind');
 const tokenAbi = [

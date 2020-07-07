@@ -3,7 +3,7 @@ import { users } from './adminManagerUser'
 import { transactions } from './AdminManagerTransactions'
 //import { reducer as transactions } from './AdminManagerTransactions'
 //import { reducer as newArticle } from "./adminManagerNewArticle";
-import { wallet } from './AdminManagerLocal'
+//import { wallet } from './AdminManagerLocal'
 
 export const actionTypes = {
     ADMIN_URI_LOCATION:"ADMIN_URI_LOCATION",
@@ -39,7 +39,7 @@ const admin = combineReducers({
     adminGlobalState:reducer,
     users,
     transactions,
-    wallet
+    //wallet
     //newArticle,
    // articles
 });

@@ -7,7 +7,7 @@ import AdminManagerUser from '../AdminManagerUser';
 import AdminManagerTransactions from '../AdminManagerTransactions';
 import AdminManagerLocal from '../AdminManagerLocal';
 import AdminManagerProve from '../AdminManagerProve';
-import blockchainupload from '../blockchainupload';
+import Blockchainupload from '../Blockchainupload';
 import Detail from '../Detail';
 import NotFound from '../NotFound';
 import { bindActionCreators } from 'redux'
@@ -47,16 +47,24 @@ class Admin extends Component {
                                     <AdminMenu history={this.props.history} />
                                 </div>
                                 <div className={style.contentContainer}>
-                                    <Switch>
-                                        <Route exact path={url} component={AdminIndex}/>
+                                    <Switch>  
+                                    <Route exact path={url} component={AdminIndex}/>
                                         <Route path={`${url}/managerUser`} component={AdminManagerUser}/>
-                                        <Route path={`${url}/uploadfileipfs`} component={AdminManagerTransactions}/>
-                                        <Route path={`${url}/uploadfileblockchain`} component={blockchainupload}/>
+                                        <Route path={`${url}/transactionrecord`} component={AdminManagerTransactions}/>
+                                        <Route path={`${url}/uploadfileblockchain`} component={Blockchainupload}/>
                                         <Route path={`${url}/localencryption`} component={AdminManagerLocal}/>
                                         <Route path={`${url}/transactioninformation`} component={AdminManagerProve}/>
                                         <Route path={`${url}/detail`} component={Detail}/>
                                         <Route path={`${url}/logout`}/>
                                         <Route component={NotFound}/>
+                                        {/* <Route exact path={url} component={() => <AdminIndex/>}/>
+                                        <Route path={`${url}/managerUser`} component={() => <AdminManagerUser/>}/>
+                                         <Route path={`${url}/transactionrecord`} component={() => <AdminManagerTransactions/>}/>
+                                        <Route path={`${url}/uploadfileblockchain`} component={() => <Blockchainupload/>}/>
+                                        <Route path={`${url}/localencryption`} component={() => <AdminManagerLocal/>}/>
+                                        <Route path={`${url}/transactioninformation`} component={() => <AdminManagerProve/>}/>
+                                        <Route path={`${url}/detail`} component={() => <Detail/>}/> */}
+                                        {/* <Route path={`${url}/logout`}/> */}
                                     </Switch>
                                 </div>
                             </div>

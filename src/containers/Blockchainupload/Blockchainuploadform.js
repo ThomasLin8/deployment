@@ -56,14 +56,18 @@ class bcform extends React.Component {
           })(
             <Checkbox>同意服务条款</Checkbox>
           )}
+          <br></br>
+          <br></br>
           {/* <a className="login-form-forgot" href="">Forgot password</a> */}
-          <Button type="primary" htmlType="submit" className="login-form-button">
+          <div className='login-form-button'>
+          <Button size="large" type="primary" htmlType="submit"  >
             文件上传
           </Button>
-          {/* Or <a href="">register now!</a> */}
+          </div>
+       
         </FormItem>
       </Form>
-      {/* <a className="githubUrl" href="https://github.com/zhaoyu69/antd-spa"> </a> */}
+   
                 </div>
             </div>
 

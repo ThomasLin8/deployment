@@ -6,7 +6,7 @@ const menus = [
     {url: '/', name: '首页', iconType: 'home'},
     {url: '/managerUser', name: '用户管理', iconType: 'usergroup-delete'},
     {url: '/uploadfileblockchain', name: '文件存储', iconType: 'file-text'},
-     {url: '/uploadfileipfs', name: '存储记录', iconType: 'file-text'},
+     {url: '/transactionrecord', name: '存储记录', iconType: 'file-text'},
     {url: '/transactioninformation', name: '信息验证', iconType: 'message'},
 ];
 
