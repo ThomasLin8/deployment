@@ -61,12 +61,15 @@ const privateKey = Buffer.from('061676AE52F57B2A90F859889C76FEFCF68EE4483A0E46D0
 const web3 = new Web3(new Web3.providers.HttpProvider("http://39.99.215.93:8546"));
 let senddata = []; //发送数据
 let nonce; //nonce
+let ttxhash;
 let transaction =[];
 let gasused;
 let cost;
 let keysize;
+let walletmoney
 let keyhash
 let formdata
+let isWriteSuccess
 
 
 //合约地址
@@ -140,33 +143,33 @@ class uploadfileblockchain extends Component {
         super(props)
         this.shouldComponentUpdate = PureRenderMixin.shouldComponentUpdate.bind(this);
         this.state = {
-              blockChainHash: null,
-              address: contractAddr,
-              imgHash: null,
-              isWriteSuccess: false,
-              txhash:null,
-              tblockhash:null,
-              msgshow: false,
-              gasused: null,
-              blockhash: null,
-              readmsg: false,
-              filename: null,
-              filesize: null,
-              filetype: null,
-              ipfsname: null,
-              ipfsize: null,
-              visible1: false,
-              visible2: false,
-              visible3: false,
-              visiblef: false,
-              visibleb: false,
-              visilblefile: false,
-              walletshow: null,
-              cost:null,
-              loading1:false,
-              loading2:false,
-              current:0,
-              formdata:null,
+            blockChainHash: null,
+            address: contractAddr,
+            imgHash: null,
+            isWriteSuccess: false,
+            txhash:null,
+            tblockhash:null,
+            msgshow: false,
+            gasused: null,
+            blockhash: null,
+            readmsg: false,
+            filename: null,
+            filesize: null,
+            filetype: null,
+            ipfsname: null,
+            ipfsize: null,
+            visible1: false,
+            visible2: false,
+            visible3: false,
+            visiblef: false,
+            visibleb: false,
+            visilblefile: false,
+            walletshow: null,
+            cost:null,
+            loading1:false,
+            loading2:false,
+            current:0,
+            formdata:null,
 
           }
 
