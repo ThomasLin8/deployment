@@ -51,8 +51,7 @@ class User extends Component {
                                     <Switch>
                                         <Route exact path={url} component={AdminIndex}/>
                                         <Route path={`${url}/transactionrecord`} component={AdminManagerTransactions}/>
-                                        <Route path={`${url}/uploadfileblockchain`} component={Blockchainupload}/>
-                                        <Route path={`${url}/localencryption`} component={AdminManagerLocal}/>
+                                        <Route path={`${url}/uploadfileblockchain`} component={Blockchainupload}/>          
                                         <Route path={`${url}/transactioninformation`} component={AdminManagerProve}/>
                                         <Route path={`${url}/detail`} component={Detail}/>
                                         <Route path={`${url}/logout`}/>

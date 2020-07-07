@@ -72,7 +72,6 @@ let formdata
 //合约地址
 //const contractAddr = '0xe0A2318f72fCe73AE9Cc207014fF361Cf3E05680';
 const contractAddr = '0xe0A2318f72fCe73AE9Cc207014fF361Cf3E05680';
-const contractAddr =
 //设置使用的账户
 web3.eth.defaultAccount = '0x1aB1DC744b964f5c5023d92666D7f738Eb04B203';
 
