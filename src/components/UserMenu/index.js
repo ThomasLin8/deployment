@@ -6,7 +6,7 @@ const menus = [
     {url: '/', name: '首页', iconType: 'home'},
     {url: '/uploadfileblockchain', name: '上传文件到区块链', iconType: 'file-text'},
      {url: '/transactionrecord', name: '存储记录', iconType: 'file-text'},
-    {url: '/localencryption', name: '本地文件加密存储', iconType: 'file-text'},
+    //{url: '/localencryption', name: '本地文件加密存储', iconType: 'file-text'},
     {url: '/transactioninformation', name: '信息验证', iconType: 'message'},
 ];
 

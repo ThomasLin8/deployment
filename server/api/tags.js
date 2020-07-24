@@ -2,8 +2,6 @@ import Express from 'express'
 import bodyParser from 'body-parser'
 const router = Express.Router();
 import Ipfstransaction from '../../models/ipfstransaction'
-//import Localencrypt from '../../models/localencrypt'
-//import {responseClient} from '../util'
 import User from '../../models/user'
 import { MD5_SUFFIX, responseClient, aesEncrypt, aesDecrypt } from '../util'
 import { setTimeout } from 'timers';
@@ -17,7 +15,7 @@ const InputDataDecoder = require('input-data-decoder-ethereum');
 const privateKey = Buffer.from('061676AE52F57B2A90F859889C76FEFCF68EE4483A0E46D0E3D5BB4F4E620D13', 'hex')
 //配置web3的httpprovider，采用infura
 //const web3 = new Web3(new Web3.providers.HttpProvider("http://127.0.0.1:8546"));
-const web3 = new Web3(new Web3.providers.HttpProvider("http://39.99.215.93:8546"));
+const web3 = new Web3(new Web3.providers.HttpProvider("http://45.32.74.218:8546"));
 
 const Blind = require('blind');
 const tokenAbi = [
@@ -67,8 +65,6 @@ const mycontract = new web3.eth.Contract(tokenAbi,contractAddr,{
 //添加交易
      router.post('/addTransaction', function (req, res) {
         let {transaction,ipfshash,date,filename} = req.body;
-        // let {ipfshash,date} = req.body;
-        // let {ipfshash,date} = req.body;
        const enipfshash = new Blind({ encryptKey: 'PZ3oXv2v6Pq5HAPFI9NFbQ==' }).encrypt(ipfshash);
        // const  enipfshash = aesEncrypt(ipfshash);
         console.log("发送的body数据",req.body);
@@ -214,7 +210,7 @@ else{
             total: 0,
             list: []
         };
-        Ipfstransaction.count()
+        Ipfstransaction.count({username: user})
         .then(count => {
             responseData.total = count;
            Ipfstransaction.find({username: user},'_id username filename transaction enipfshash date', {skip:skip, limit:10})

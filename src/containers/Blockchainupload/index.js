@@ -20,7 +20,7 @@ const InputDataDecoder = require('input-data-decoder-ethereum');
 
 //设置IPFS参数
 //const ipfs = ipfsAPI('/ip4/127.0.0.1/tcp/5001');
-const ipfs = ipfsAPI('/ip4/39.99.215.93/tcp/5001');
+const ipfs = ipfsAPI('/ip4/45.32.74.218/tcp/5001');
 //使用的合约的abi信息
 const tokenAbi =[
 	{
@@ -58,7 +58,7 @@ const privateKey = Buffer.from('061676AE52F57B2A90F859889C76FEFCF68EE4483A0E46D0
 
 //配置web3的httpprovider
 //const web3 = new Web3(new Web3.providers.HttpProvider("http://127.0.0.1:8546"));
-const web3 = new Web3(new Web3.providers.HttpProvider("http://39.99.215.93:8546"));
+const web3 = new Web3(new Web3.providers.HttpProvider("http://45.32.74.218:8546"));
 let senddata = []; //发送数据
 let nonce; //nonce
 let ttxhash;
@@ -318,14 +318,10 @@ class uploadfileblockchain extends Component {
     }
 
     handleupload = (values) => {
-        console.log('是否上传内容',values)
-        console.log('有调用函数')
         formdata = values
-        console.log('上传内容',formdata.remember)
         if(formdata.remember == true && formdata.password == this.props.userInfo.password)
         {
             this.setState({visiblef:true})
-            console.log('判断无误,然而')
         }
         else if(formdata.password != this.props.userInfo.password)
         {openNotificationp()}
@@ -508,8 +504,7 @@ class uploadfileblockchain extends Component {
                                 const file = this.refs.file.files[0];
                                 this.setState({filename:file.name});
                                 this.setState({filetype:file.type});
-                                this.setState({filesize:file.size});
-                                            
+                                this.setState({filesize:file.size});                    
                             }}/>
                                 <br></br>
                     <br></br>

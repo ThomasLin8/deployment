@@ -97,7 +97,7 @@ class AdminManagerTransactions extends Component {
                     <div className='opera'>
                         <span onClick={() => {
                              const deipfshash = new Blind({ encryptKey: 'PZ3oXv2v6Pq5HAPFI9NFbQ==' }).decrypt(text.enipfshash);
-                             const fileUrl = "http://39.99.215.93:8080/ipfs/" + deipfshash;
+                             const fileUrl = "http://45.32.74.218:8087/ipfs/" + deipfshash;
                              const a = document.createElement('a');                     
                              var filename = 'download';
                              a.href = fileUrl;
